@@ -10,6 +10,9 @@ import { Specialite } from '../models/Specialite';
 import { Delegation } from '../models/Delegation';
 import { RDV } from '../models/RDV';
 import { RendezvousService } from '../services/rendezvous.service';
+import { Patient } from '../models/Patient';
+import { DossierMedical } from '../models/DossierMedical';
+import { PatientService } from '../services/patient.service';
 
 interface AppSettings {
   container: HTMLElement;
@@ -109,7 +112,34 @@ rdvAVenir: RDV[] = [];
   };
   medecins:Medecin[]=[];
   searchMedecinCIN: any;
-  constructor(private elementRef: ElementRef,private cdr: ChangeDetectorRef,private adminService: AdminService,private RendezvousService:RendezvousService) {
+  patient:Patient={
+    idPatient: 0,
+    nomPatient: '',
+    dateNaissance: undefined,
+    cin: 0,
+    telephone: 0,
+    email: '',
+    nomDelegation: '',
+    role: 'PATIENT',
+    typeCaisse: 'CNRPS',
+    modePaiement: 'Especes',
+    dateCreation: undefined,
+    
+  };
+  dossierMedical: DossierMedical = {
+    idDossier: 1,
+    etatClinique: '',
+    groupe_sanguin: '',
+    allergie: '',
+    prescriptions_therapeutiques: '',
+    resultats_examen: '',
+    observations: '',
+    nomDuPatient: '',
+    dateNaissancePatient: undefined,
+    cinPatient: 1,
+    telephonePatient: 1
+  };
+  constructor(private elementRef: ElementRef,private cdr: ChangeDetectorRef,private adminService: AdminService,private patientService: PatientService,private RendezvousService:RendezvousService) {
     this.settings = {
       container: document.querySelector('.calendar')!,
       calendar: document.querySelector('.front')!,
@@ -322,5 +352,20 @@ rdvAVenir: RDV[] = [];
         console.error('Erreur lors de la mise à jour de l\'état RDV :', error);
         // Ajoutez ici toute logique de gestion des erreurs
       });
+  }
+  getDossierMedical(): void {
+    this.patientService.getDossierMedicalByCin(this.patient.cin)
+      .subscribe(
+        (dossierMedical: DossierMedical) => {
+          this.dossierMedical = dossierMedical;
+        },
+        (error) => {
+          console.error('Une erreur est survenue lors de la récupération du dossier médical:', error);
+          // Gérer l'erreur selon vos besoins
+        }
+      );
+  }
+  print(): void {
+    window.print(); // Appeler la fonction d'impression du navigateur
   }
 }

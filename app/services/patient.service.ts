@@ -4,6 +4,7 @@ import { Observable, catchError, tap, throwError } from 'rxjs';
 import { Patient } from '../models/Patient';
 import { Medecin } from '../models/Medecin';
 import { RDV } from '../models/RDV';
+import { DossierMedical } from '../models/DossierMedical';
 
 @Injectable({
   providedIn: 'root'
@@ -74,4 +75,16 @@ export class PatientService {
   getRDVsForPatient(cinPatient: number): Observable<RDV[]> {
     return this.http.get<RDV[]>(`${this.apiUrl}/patients/${cinPatient}/rdvs`);
   }
+  
+  associerDossierMedicalAuPatient(cin: number, dossierMedical: DossierMedical): Observable<DossierMedical> {
+    return this.http.post<DossierMedical>(`${this.apiUrl}/${cin}/dossier-medical`, dossierMedical)
+ 
+  }
+
+  getDossierMedicalByCin(cin: number): Observable<DossierMedical> {
+    return this.http.get<DossierMedical>(`${this.apiUrl}/${cin}/dossier-medical`)
+    
+  }
+
+
 }

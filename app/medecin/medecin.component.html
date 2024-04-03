@@ -361,8 +361,47 @@
           </li>
       
       <li class="tab-content tab-content-3 typography">
-        <h1>Entrer votre Cin </h1>
-        <br><br>
+        <h1>Entrer le Cin du Patient </h1>
+        <input type="number" id="cinPatient" [(ngModel)]="patient.cin" name="cinPatient" required>
+        <div *ngIf="dossierMedical" class="container">
+          <div class="logo">
+            <img src="assets/images/log2.png" alt="Logo" width="150px" height="150px">
+          </div><br><br>
+          <div class="center-title">
+            <h1>Dossier Medical Personnel</h1>
+          </div>
+          <br><br>
+          <hr>
+          <div class="patient-info">
+            <!-- Afficher les informations du patient -->
+            <h2>Informations du patient:</h2>
+            <p><strong>Nom:</strong> {{ dossierMedical.nomDuPatient }}</p>
+            <p><strong>Date de naissance:</strong> {{ dossierMedical.dateNaissancePatient | date: 'dd/MM/yyyy' }}</p>
+            <p><strong>CIN:</strong> {{ dossierMedical.cinPatient }}</p>
+            <p><strong>Telephone:</strong> {{ dossierMedical.telephonePatient}}</p>
+            
+        
+            <!-- Afficher les informations du dossier médical -->
+            <h2>Dossier Médical:</h2>
+            <p><strong>ID Dossier:</strong> {{ dossierMedical.idDossier }}</p>
+            <p><strong>État Clinique:</strong> {{ dossierMedical.etatClinique }}</p>
+            <p><strong>Groupe Sanguin:</strong> {{ dossierMedical.groupe_sanguin }}</p>
+            <p><strong>Allergies:</strong> {{ dossierMedical.allergie }}</p>
+            <p><strong>Prescriptions Thérapeutiques:</strong> {{ dossierMedical.prescriptions_therapeutiques }}</p>
+            <p><strong>Résultats d'Examens:</strong> {{ dossierMedical.resultats_examen }}</p>
+            <!-- Ajouter d'autres attributs du dossier médical ici -->
+          </div>
+          <hr>
+          <div class="doctor-notes">
+            <!-- Afficher les observations du médecin -->
+            <h2>Observations du Médecin:</h2>
+            <p><strong>Observations:</strong> {{ dossierMedical.observations }}</p>
+            <button>Ajouter des Observations</button>
+          </div>
+   
+        </div>
+               <button (click)="print()">Imprimer</button>
+
     
           
             </li>

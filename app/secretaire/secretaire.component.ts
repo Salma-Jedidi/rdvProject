@@ -8,6 +8,7 @@ import { ServiceMed } from '../models/ServiceMed';
 import { PatientService } from '../services/patient.service';
 import { AdminService } from '../services/admin.service';
 import Chart from 'chart.js/auto';
+import { DossierMedical } from '../models/DossierMedical';
 
 @Component({
   selector: 'app-secretaire',
@@ -84,6 +85,20 @@ export class SecretaireComponent implements OnInit{
     };
   
     selectedDelegation: any;
+    dossierMedical: DossierMedical = {
+      idDossier: 1,
+      etatClinique: '',
+      groupe_sanguin: '',
+      allergie: '',
+      prescriptions_therapeutiques: '',
+      resultats_examen: '',
+      observations: '',
+      nomDuPatient: '',
+      dateNaissancePatient: undefined,
+      cinPatient: 1,
+      telephonePatient: 1
+    };
+    
   constructor(private patientService: PatientService,private adminService:AdminService) { }
   ngOnInit(): void {
     this.adminService.getAllDelegations().subscribe(delegations => this.delegations = delegations);
@@ -147,7 +162,18 @@ export class SecretaireComponent implements OnInit{
     );
   }
   
-  
+  associerDossierMedicalAuPatient() {
+    this.patientService.associerDossierMedicalAuPatient(this.patient.cin, this.dossierMedical)
+      .subscribe(
+        (response) => {
+          console.log('Dossier médical associé avec succès au patient:', response);
+         
+        },
+        (error) => {
+          console.error('Une erreur est survenue lors de l\'association du dossier médical au patient:', error);
+        }
+      );
+  }
 
 addRDV() {
   // Add RDV
@@ -159,7 +185,7 @@ addRDV() {
       this.adminService.assignPatientAndMedecinTordv(this.rdv.nomDuPatient, this.rdv.nomDuMedecin, addedRDV).subscribe(
         () => {
           console.log('Association successful.');
-          // Additional logic if needed
+         
         },
         (error) => {
           console.error('Error associating RDV with Patient:', error);
