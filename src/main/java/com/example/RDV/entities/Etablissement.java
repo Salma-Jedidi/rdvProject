@@ -3,6 +3,8 @@ package com.example.RDV.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Entity
 @Data
 public class Etablissement {
@@ -14,8 +16,8 @@ public class Etablissement {
     private String libEtablissement;
     @ManyToOne
     private Gouvernorat gouvernorat;
-    @ManyToOne
+    @ManyToMany
     @JoinColumn(name = "idMedecin")
-    private Medecin medecin;
+    private List<Medecin> medecins;
 
 }

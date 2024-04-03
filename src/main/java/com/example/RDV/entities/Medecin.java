@@ -34,10 +34,10 @@ public class Medecin {
     @JoinColumn(name = "service_id")
     private ServiceMed serviceMed;
 
-    @ManyToOne
+    @ManyToMany
     @JoinColumn(name = "idEtablissement", referencedColumnName = "idEtablissement")
 
-    private Etablissement etablissement;
+    private List<Etablissement> etablissements;
     @Enumerated
     private EtatMedecin etatMedecin;
 }

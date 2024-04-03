@@ -41,7 +41,8 @@ public class Patient  {
     @OneToOne
     @JoinColumn(name = "dossier_medical_id")
     private Document dossierMedical;
-
+    @OneToOne
+    private DossierMedical dossierMed ;
 
     private String nomDelegation;
     private String password;
