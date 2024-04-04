@@ -392,4 +392,8 @@ getEtatRDVChoice(etatRDV: number): string {
 getTypeOfEtatRDV(): string {
   return typeof this.rdv.etatRDV;
 }
+fillFormFields(rdv: RDV): void {
+  this.rdv.nomDuPatient = rdv.nomDuPatient;
+  this.rdv.nomDuMedecin = rdv.nomDuMedecin;
+}
 }

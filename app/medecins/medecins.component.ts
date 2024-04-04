@@ -164,39 +164,6 @@ addMedecin() {
     );
   }
 
-  assignSpecialiteAndServiceToMedecin() {
-    this.adminService.assignSpecialiteAndServiceToMedecin(this.specialiteId, this.serviceId, this.medecinId).subscribe(
-      () => {
-        console.log("Medecin:", this.medecin.idMedecin);
-        console.log('Assigned Specialite and Service to Medecin successfully');
-      },
-      (error) => {
-        console.error('Error assigning Specialite and Service to Medecin:', error);
-      }
-    );
-  }
-  assignPatientAndMedecinTordv()  :void{
-    this.adminService.assignPatientAndMedecinTordv(this.patientId, this.medId, this.rdvId).subscribe(
-      () => {
-        console.log('Assigned Patient and Medic to RDV successfully');
-      },
-      (error) => {
-        console.error('Error assigning:', error);
-      }
-    );
-  }
-  assignEtablissementToMedecin(): void {
-    this.adminService.assignEtablissementToMedecin(this.etablissementId, this.medecinId).subscribe(
-      () => {
-        console.log('Assignation réussie');
-        // Vous pouvez ajouter d'autres actions après la réussite de la requête
-      },
-      (error) => {
-        console.error('Erreur lors de l\'assignation', error);
-        // Vous pouvez gérer les erreurs ici
-      }
-    );
-  }
 
 
  

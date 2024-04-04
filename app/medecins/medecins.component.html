@@ -118,7 +118,7 @@
               Id Medecin
             </div>
            
-            <div class="product-cell category">nom du Medecin
+            <div class="product-cell category" >nom du Medecin
             </div>
     
             <div class="product-cell status-cell">CIN
@@ -155,7 +155,7 @@
             <div class="product-cell image">
               <span>{{medecin.idMedecin}}</span>
             </div>
-            <div class="product-cell category">
+            <div class="product-cell category" >
               <span class="cell-label">Nom:</span>{{medecin.nomMedecin}}
             </div>
             <div class="product-cell status-cell">
@@ -229,69 +229,7 @@
           Supprimer</button>
         </div>
         
-        <div class="container">
-          <h1>Assign Specialite And Service To Medecin</h1>
-          <form #assignSpecialiteForm="ngForm" (ngSubmit)="assignSpecialiteAndServiceToMedecin()">
-            <div class="form-group">
-              <label for="specialiteId">Specialite ID:</label>
-              <input type="number" id="specialiteId" name="specialiteId" [(ngModel)]="specialiteId" required>
-            </div>
-        
-            <div class="form-group">
-              <label for="serviceId">Service ID:</label>
-              <input type="number" id="serviceId" name="serviceId" [(ngModel)]="serviceId" required>
-            </div>
-        
-            <div class="form-group">
-              <label for="medecinId">Medecin ID:</label>
-              <input type="number" id="medecinId" name="medecinId" [(ngModel)]="medecinId" required>
-            </div>
-        
-            <button type="submit">Assign</button>
-          </form>
-        </div>
-          <br>
-          <div class="container">
-         
-            <h1>Assign Patient and Medecin to RDV</h1>
-            <form #assignRdvForm="ngForm" (ngSubmit)="assignPatientAndMedecinTordv()">
-              <div class="form-group">
-                <label for="patientId">Patient :</label>
-                <input type="text" id="patientId" name="patientId" [(ngModel)]="patientId" required>
-              </div>
-          
-              <div class="form-group">
-                <label for="medecinId">Medecin :</label>
-                <input type="text" id="medecinId" name="medecinId" [(ngModel)]="medId" required>
-              </div>
-          
-              <div class="form-group">
-                <label for="rdvId">Rendez-Vous ID:</label>
-                <input type="number" id="rdvId" name="rdvId" [(ngModel)]="rdvId" required>
-              </div>
-          
-              <button type="submit">Assign</button>
-            </form>
-          </div>
-  
-        <!-- app.component.html -->
-  <div class="container">
-    <h1>Assigner un établissement à un médecin</h1>
-  
-    <form #assignForm="ngForm" (ngSubmit)="assignEtablissementToMedecin()">
-      <div class="form-group">
-        <label for="etablissementId">ID de l'établissement :</label>
-        <input type="number" id="etablissementId" name="etablissementId" [(ngModel)]="etablissementId" required>
-      </div>
-  
-      <div class="form-group">
-        <label for="medecinId">ID du médecin :</label>
-        <input type="number" id="medecinId" name="medecinId" [(ngModel)]="medecinId" required>
-      </div>
-  
-      <button type="submit">Assigner</button>
-    </form>
-  </div>
+
   
   
       </div>

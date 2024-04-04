@@ -9,6 +9,7 @@ import { PatientService } from '../services/patient.service';
 import { AdminService } from '../services/admin.service';
 import Chart from 'chart.js/auto';
 import { DossierMedical } from '../models/DossierMedical';
+import { Etablissement } from '../models/Etablissement';
 
 @Component({
   selector: 'app-secretaire',
@@ -86,7 +87,7 @@ export class SecretaireComponent implements OnInit{
   
     selectedDelegation: any;
     dossierMedical: DossierMedical = {
-      idDossier: 1,
+      idDossier: 0,
       etatClinique: '',
       groupe_sanguin: '',
       allergie: '',
@@ -98,7 +99,29 @@ export class SecretaireComponent implements OnInit{
       cinPatient: 1,
       telephonePatient: 1
     };
-    
+ 
+
+  searchMedecinCIN: any;
+
+  specialiteId: any;
+  serviceId: any;
+  medecinId: any;
+  patientId: any;
+  rdvId:any;
+  etablissementId:any;
+ medId:any;
+   etablissement:Etablissement={
+  idEtablissement:0,
+    codeEtablissement: 0,
+    libEtablissement:''
+
+};
+etablissements:Etablissement[]=[];
+selectedetablissement:any;
+selectedSpecialite: any;
+rendezVousList: any;
+
+
   constructor(private patientService: PatientService,private adminService:AdminService) { }
   ngOnInit(): void {
     this.adminService.getAllDelegations().subscribe(delegations => this.delegations = delegations);
@@ -163,10 +186,10 @@ export class SecretaireComponent implements OnInit{
   }
   
   associerDossierMedicalAuPatient() {
-    this.patientService.associerDossierMedicalAuPatient(this.patient.cin, this.dossierMedical)
+    this.patientService.associerDossierMedicalAuPatient(this.patient.cin,this.dossierMedical)
       .subscribe(
-        (response) => {
-          console.log('Dossier médical associé avec succès au patient:', response);
+        (nouveauDossier:DossierMedical) => {
+          console.log('Dossier médical associé avec succès au patient:', nouveauDossier);
          
         },
         (error) => {
@@ -234,6 +257,46 @@ getAllRDVs() {
       console.error('Error fetching RDVs:', error);
     }
   );
+}
+assignSpecialiteAndServiceToMedecin() {
+  this.adminService.assignSpecialiteAndServiceToMedecin(this.specialiteId, this.serviceId, this.medecinId).subscribe(
+    () => {
+      console.log("Medecin:", this.medecin.idMedecin);
+      console.log('Assigned Specialite and Service to Medecin successfully');
+    },
+    (error) => {
+      console.error('Error assigning Specialite and Service to Medecin:', error);
+    }
+  );
+}
+assignPatientAndMedecinTordv()  :void{
+  this.adminService.assignPatientAndMedecinTordv(this.patientId, this.medId, this.rdvId).subscribe(
+    () => {
+      console.log('Assigned Patient and Medic to RDV successfully');
+    },
+    (error) => {
+      console.error('Error assigning:', error);
+    }
+  );
+}
+assignEtablissementToMedecin(): void {
+  this.adminService.assignEtablissementToMedecin(this.etablissementId, this.medecinId).subscribe(
+    () => {
+      console.log('Assignation réussie');
+      // Vous pouvez ajouter d'autres actions après la réussite de la requête
+    },
+    (error) => {
+      console.error('Erreur lors de l\'assignation', error);
+      // Vous pouvez gérer les erreurs ici
+    }
+  );
+}
+fillFormFields(rdv: RDV): void {
+  this.rdv.nomDuPatient = rdv.nomDuPatient;
+  this.rdv.nomDuMedecin = rdv.nomDuMedecin;
+  this.rdv.dateRDV=rdv.dateRDV;
+  this.rdv.heureRdv=rdv.heureRdv;
+  this.rdv.idRDV=rdv.idRDV;
 }
 getEtatRDVClass(etatRDV: number): string {
   switch (etatRDV) {

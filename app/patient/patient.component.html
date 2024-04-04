@@ -1,12 +1,4 @@
 
-  <div class="imag">
-    <h2>Libérez votre emploi du temps et gagnez du temps précieux
-    en prenant rendez-vous facilement avec notre application.
-     Profitez de services médicaux de confiance, sans tracas ni délais.
-    Votre santé entre vos mains.</h2>
-  </div>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-2MIPy7XxyPks56gakD8b5oKlk6jVld1VJTL1QT9hzeyw2k6zB/Qz7hXAAZl0+LlFzpR95XjNLE0xF+rW+hFhfw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <br>
   <body>
   
   
@@ -58,18 +50,26 @@
               </form>
               <div *ngIf="medecins.length > 0">
                 <h2>Résultats de la recherche :</h2>
-                <ul class="medecin-grid">
-                  <li *ngFor="let medecin of medecins" class="medecin-card">
-                    <h3>{{ medecin.nomMedecin }}</h3>
-                    <p>Téléphone: {{ medecin.tel }}</p>
-                    <p>État du médecin: {{ medecin.etatMedecin }}</p>
-                    <p>Spécialité: {{ medecin.libelleSpecialite }}</p>
-                    <p>Service: {{ medecin.libelleService }}</p>
-                    <p>Établissement: {{ medecin.nomDeletablissement }}</p>
-                    <p>Délégation: {{ medecin.delegationMedecin }}</p>
+                <div class="containerCard" *ngFor="let medecin of medecins">
+                  <div class="card" >
+                
+                   <div class="card-top "> <h3 id="nomDuMedecin" style="color: white">{{ medecin.nomMedecin }}</h3></div>
+                 <br><br>
+                   <div class="card-content">
+                   <p><strong>Téléphone:</strong> {{ medecin.tel }}</p>
+                    <p><strong>État du médecin:</strong> {{ medecin.etatMedecin }}</p>
+                    <p><strong>Spécialité:</strong> {{ medecin.libelleSpecialite }}</p>
+                    <p><strong>Service: </strong>{{ medecin.libelleService }}</p>
+                    <p><strong>Établissement: </strong>{{ medecin.nomDeletablissement }}</p>
+                    <p><strong>Délégation:</strong> {{ medecin.delegationMedecin }}</p>
                  
-                  </li>
-                </ul>
+                 </div>
+                <div class="cta">
+                  <a class="btn btn-blue" href="#prendre-rdv" style="color: white">Prendre un Rendez-Vous</a>
+                  <a class="decline" href="#" style="color: #22304a">No thanks</a>
+                </div>
+              </div>
+            </div>
               </div>
               
               <!-- Afficher les résultats -->
@@ -77,7 +77,7 @@
             </div>
 						</li>
 					
-					<li class="tab-content tab-content-2 typography">
+					<li id="prendre-rdv" class="tab-content tab-content-2 typography">
 						 <h1>Votre Agenda</h1>
           <h3>Entrer votre Cin</h3>
           <div>
@@ -113,10 +113,10 @@
                 <div class="product-cell category">
                   <span class="cell-label">Heure:</span>{{ rdv.heureRdv }}
                 </div>
-                <div class="product-cell category">
+                <div class="product-cell category" (click)="fillFormFields(rdv)">
                   <span class="cell-label">Nom de Medecin:</span>{{ rdv.nomDuMedecin }}
                 </div>
-                <div class="product-cell category">
+                <div class="product-cell category" (click)="fillFormFields(rdv)">
                   <span class="cell-label">Nom du Patient:</span>{{ rdv.nomDuPatient }}
                 </div>
                 <div class="product-cell status-cell">
@@ -491,3 +491,12 @@
 		</div>      
  
   </body>
+   <br>
+  <div class="imag">
+    <h2>Libérez votre emploi du temps et gagnez du temps précieux
+    en prenant rendez-vous facilement avec notre application.
+     Profitez de services médicaux de confiance, sans tracas ni délais.
+    Votre santé entre vos mains.</h2>
+  </div>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-2MIPy7XxyPks56gakD8b5oKlk6jVld1VJTL1QT9hzeyw2k6zB/Qz7hXAAZl0+LlFzpR95XjNLE0xF+rW+hFhfw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+ 

@@ -38,7 +38,7 @@ export class MedecinComponent implements OnInit {
     this.adminService.getAllEtablissements().subscribe(etablissements => this.etablissements = etablissements);
     this.adminService.getAllSpecialite().subscribe(specialites => this.specialites = specialites);
     this.adminService.getAllDelegations().subscribe(delegations => this.delegations = delegations);
- 
+  
    
   }
   mois: string[] = [
@@ -112,6 +112,7 @@ rdvAVenir: RDV[] = [];
   };
   medecins:Medecin[]=[];
   searchMedecinCIN: any;
+  nouvelleObservation:any;
   patient:Patient={
     idPatient: 0,
     nomPatient: '',
@@ -365,7 +366,27 @@ rdvAVenir: RDV[] = [];
         }
       );
   }
+  ajouterObservation( ): void {
+    this.patientService.ajouterObservation(this.dossierMedical.cinPatient,this.nouvelleObservation).subscribe(
+      response => {
+        console.log(response); // Affiche la réponse dans la console
+        // Traitez la réponse comme vous le souhaitez ici
+      },
+      error => {
+        console.error(error); // Affiche l'erreur dans la console
+        // Traitez l'erreur comme vous le souhaitez ici
+      }
+    );
+  }
+  fillFormFields(rdv: RDV): void {
+    this.rdv.nomDuPatient = rdv.nomDuPatient;
+    this.rdv.nomDuMedecin = rdv.nomDuMedecin;
+    this.rdv.dateRDV=rdv.dateRDV;
+    this.rdv.heureRdv=rdv.heureRdv;
+    this.rdv.idRDV=rdv.idRDV;
+  }
   print(): void {
     window.print(); // Appeler la fonction d'impression du navigateur
   }
+
 }

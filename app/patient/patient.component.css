@@ -177,7 +177,8 @@ body {
   margin: 0;
   font-family: 'Open Sans', Helvetica, Arial, sans-serif;
   overflow: auto;
-  background-color: rgba(214, 223, 241, 0.8) ; 
+  background: linear-gradient(to bottom, #0f0c29, #3264a6, #22304a);
+  background-image: url("../../assets/images/sante-connectee-et-defis-iot.jpg"); 
   animation: gradient 22s ease infinite;
 
   background-attachment: fixed;
@@ -288,7 +289,7 @@ h1 {
 	font: 40px/60px Gabriela, Georgia, serif;
 	text-align: center;
 	text-shadow: 3px 3px rgba(0,0,0,0.1);
-	color: #1a2e7d;	
+	color: #edeef1;	
 }
 p {
 	margin-bottom: 40px;
@@ -1439,15 +1440,14 @@ svg {
 	background: linear-gradient((80deg, #3b508a, #506ca3e6),0.8);
   }
   
-  .medecin-card {
+  /* .medecin-card {
 	border: 1px solid #ccc;
 	padding: 10px;
 	position: relative;
     height: 0;
     padding-bottom: calc(100% - 16px);
     margin-bottom: 6.6em;
-
-   
+ 
 }
 
 .products-area-wrapper {
@@ -1455,7 +1455,7 @@ svg {
   max-height: 100%;
   overflow: auto;
   padding: 0 4px;
-}
+} */
 
 .tableView .products-header {
   display: flex;
@@ -1705,3 +1705,76 @@ svg {
 .gridView .cell-label {
   opacity: 0.6;
 }
+.card {
+	border-radius: 10px;
+	box-shadow: 0px 0px 50px #ccc;
+	width: 350px;
+	text-align: center;
+	margin-left: 2em;
+	margin-top: 2em;
+  }
+  
+  .card-top {
+	color: #fff;
+	font-size: 1.5em;
+	height: 100px;
+	padding-bottom: 0.5em;
+	display: flex;
+	justify-content: center;
+	align-items: center; /* Ajout pour centrer verticalement le texte */
+	background-color: #22304a; /* Ajout de la couleur de fond */
+	border-top-left-radius: 10px; /* Ajout pour arrondir les coins supérieurs gauche et droit */
+	border-top-right-radius: 10px;
+  }
+  
+  .card-content {
+	padding: 1em; /* Ajout de marge intérieure pour le contenu */
+	
+	justify-content: center;
+	align-items: center;
+  }
+  
+  .cta {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+  }
+  
+  /* Ajout de styles pour les liens */
+  .btn {
+	border-radius: 25px;
+	box-shadow: 0px 0px 25px #c6c6c6;
+	color: #fff;
+	display: block;
+	margin: 1em auto; /* Modification de la marge */
+	padding: 10px 0;
+	text-decoration: none;
+	width: 75%;
+  }
+  
+  .btn-blue {
+	background: linear-gradient(80deg, #3b508a, #22304a);
+	background-size: 150% auto;
+	background-position: 31% 0;
+	transition: background-position 0.4s;
+  }
+  
+  .btn-blue:hover {
+	background-position: 100% 0;
+  }
+  
+  .decline {
+	color: #fff; /* Modification de la couleur du texte en blanc */
+	font-weight: 700;
+	display: block;
+	padding: 1em 0 0;
+	margin: auto;
+	text-decoration: none;
+	text-transform: uppercase;
+	transition: color 0.3s ease;
+	width: 40%;
+  }
+  
+  .decline:hover {
+	color: #eee; 
+  }  
