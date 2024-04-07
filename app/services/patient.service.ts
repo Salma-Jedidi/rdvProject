@@ -5,6 +5,7 @@ import { Patient } from '../models/Patient';
 import { Medecin } from '../models/Medecin';
 import { RDV } from '../models/RDV';
 import { DossierMedical } from '../models/DossierMedical';
+import { Messages } from '../models/Messages';
 
 @Injectable({
   providedIn: 'root'
@@ -87,5 +88,20 @@ export class PatientService {
     return this.http.put<string>(`${this.apiUrl}/${cin}/ajouterObservation`, nouvelleObservation);
   }
 
+  sendMessage(nomPatient: string, messagePatient: Messages): Observable<Messages> {
+    // Construire l'URL avec le nom du patient
+    const url = `${this.apiUrl}/messagePatient/${nomPatient}`;
+  
+    // Effectuer la requête POST avec l'URL construite
+    return this.http.post<Messages>(url, messagePatient);
+}
 
+
+  replyMessage(email: string, reponse: string,message:Messages): Observable<Messages> {
+    return this.http.post<Messages> (`${this.apiUrl}/patients/${email}/messages/reply`, message);
+  }
+  getPourcentageRDVPayes(): Observable<number> {
+    
+    return this.http.get<number>(`${this.apiUrl}/pourcentagePayes`);
+  }
 }

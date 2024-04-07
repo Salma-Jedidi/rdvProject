@@ -156,7 +156,11 @@
              
               <label>Mettre à jour l'état du RDV</label>
             </div>
-            <br>
+            <br>   
+            <div class="clean-slide">
+              <label for="cinMedecin">CIN Médecin:</label>
+              <input type="text" id="cinMedecin" name="cinMedecin" [(ngModel)]="medecin.cinMedecin">
+            </div>
             <div class="clean-slide">
               <label for="idRDV">ID RDV:</label>
               <input type="text" id="idRDV" name="idRDV" [(ngModel)]="rdv.idRDV">
@@ -172,14 +176,18 @@
                 <option value="MODIFIER">Modifier</option>
               </select>
             </div>
-            
             <div class="clean-slide">
-              <label for="cinMedecin">CIN Médecin:</label>
-              <input type="text" id="cinMedecin" name="cinMedecin" [(ngModel)]="medecin.cinMedecin">
+              <label for="paiementRDV">Paiement RDV:</label>
+             
+              <select [(ngModel)]="rdv.paiementRDV" name="paiementRDV">
+                <option value="Payes">Payé</option>  
+                <option value="NonPayes">Non Payé</option>
+              </select>
             </div>
+
             <br>
             <button (click)="marquerEtatRDV()" value="Mettre à jour l'état du RDV">marquer Etat</button> 
-            <button >Paiement</button> 
+            <button (click)="marquerPaiement()" >Etat Paiement</button> 
             
             
           </span>

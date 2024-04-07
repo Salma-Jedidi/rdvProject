@@ -10,6 +10,7 @@ import { AdminService } from '../services/admin.service';
 import Chart from 'chart.js/auto';
 import { DossierMedical } from '../models/DossierMedical';
 import { Etablissement } from '../models/Etablissement';
+import { RendezvousService } from '../services/rendezvous.service';
 
 @Component({
   selector: 'app-secretaire',
@@ -42,7 +43,8 @@ export class SecretaireComponent implements OnInit{
       etatRDV:'',
       nomDuPatient:'',
       nomDuMedecin:'',
-      nomDelegation:''
+      nomDelegation:'',
+      paiementRDV:''
     };
     medecin: Medecin = {
       idMedecin: 0,
@@ -120,15 +122,18 @@ etablissements:Etablissement[]=[];
 selectedetablissement:any;
 selectedSpecialite: any;
 rendezVousList: any;
+rdvPayes: RDV[]=[];
+rdvNonPayes: RDV[]=[];
 
-
-  constructor(private patientService: PatientService,private adminService:AdminService) { }
+  constructor(private patientService: PatientService,private adminService:AdminService,private rdvService:RendezvousService) { }
   ngOnInit(): void {
     this.adminService.getAllDelegations().subscribe(delegations => this.delegations = delegations);
     this.adminService.getAllSpecialite().subscribe(specialites => this.specialites =specialites);
     this.adminService.getAllServiceMedicales().subscribe(services=>this.services=services);
     this.getAllRDVs();
     this.getAllPatients();
+    this.getRDVPayes();
+    this.getRDVNonPayes();
   }
   getAllPatients() {
     this.adminService.getAllPatients().subscribe(
@@ -378,6 +383,16 @@ ngAfterViewInit(): void {
       }
     });
   }
+  
+  getRDVPayes(): void {
+    this.rdvService.getRDVPayes().subscribe(data => {
+      this.rdvPayes = data;
+    });
+  }
 
-
+  getRDVNonPayes(): void {
+    this.rdvService.getRDVNonPayes().subscribe(data => {
+      this.rdvNonPayes = data;
+    });
+  }
 }

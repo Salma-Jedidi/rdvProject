@@ -11,4 +11,5 @@ export interface RDV {
     nomDuMedecin:string;
     nomDelegation:string;
    etatRDV:String;
+   paiementRDV: string;
 }

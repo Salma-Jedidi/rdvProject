@@ -26,6 +26,16 @@ export class RendezvousService {
     return this.http.put(`${this.apiUrl}/rdvs/${idRDV}/etat/${nouvelEtat}?cinMedecin=${cinMedecin}`, {});
   }
   
+  marquerPaiement(idRDV: number, paiementRDV: string): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/${idRDV}/paiementrdv?paiementRDV=${paiementRDV}`, {});
+  }
   
+  getRDVPayes(): Observable<RDV[]> {
+    return this.http.get<RDV[]>(`${this.apiUrl}/payes`);
+  }
+
+  getRDVNonPayes(): Observable<RDV[]> {
+    return this.http.get<RDV[]>(`${this.apiUrl}/nonPayes`);
+  }
   
 }

@@ -60,7 +60,8 @@ rdv: RDV = {
   etatRDV:'',
   nomDuPatient:'',
   nomDuMedecin:'',
-  nomDelegation:''
+  nomDelegation:'',
+  paiementRDV:''
 };
 rdvs: RDV[] = [];
 addRDV() {

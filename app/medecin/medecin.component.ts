@@ -92,7 +92,8 @@ rdv: RDV = {
   etatRDV:'',
   nomDuPatient:'',
   nomDuMedecin:'',
-  nomDelegation:''
+  nomDelegation:'',
+  paiementRDV:''
 };
 rdvs: RDV[] = [];
 rdvPasses: RDV[] = [];
@@ -377,6 +378,12 @@ rdvAVenir: RDV[] = [];
         // Traitez l'erreur comme vous le souhaitez ici
       }
     );
+  }
+  marquerPaiement(): void {
+    this.RendezvousService.marquerPaiement(this.rdv.idRDV, this.rdv.paiementRDV).subscribe(response => {
+      console.log(response);
+   
+    });
   }
   fillFormFields(rdv: RDV): void {
     this.rdv.nomDuPatient = rdv.nomDuPatient;
