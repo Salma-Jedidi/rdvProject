@@ -33,23 +33,31 @@ public class PatientController {
         patientServices.choisirModePaiement(cinPatient, modePaiementChoisi,typeCaisse);
         return ResponseEntity.status(HttpStatus.OK).body("Mode de paiement choisi avec succès pour le patient avec le CIN : " + cinPatient);
     }
-    /*@PreAuthorize("permitAll()")
-    @PostMapping("/addpatient")
-    public Patient addPatient(@RequestPart("patient") Patient patient,
-                              @RequestPart(value = "pieceJointe", required = false) MultipartFile pieceJointe,
-                              @RequestPart(value = "dossierMedical", required = false) MultipartFile dossierMedical) {
-        Patient p = patientServices.addPatient(patient, pieceJointe, dossierMedical);
-        return p;
+    @PostMapping("/{cin}/dossier-medical-patient")
+    public ResponseEntity<DossierMedical> associerDossierMedicalAuPatient(@PathVariable("cin") Integer cinPatient,@RequestBody DossierMedical nouveauDossierMedical) {
+
+        DossierMedical dossierMedical = patientServices.associerDossierMedicalAuPatient(cinPatient,nouveauDossierMedical);
+        return ResponseEntity.ok().body(dossierMedical);
     }
 
+
+    @GetMapping("/{cin}/dossier-medical")
+    public ResponseEntity<DossierMedical> getDossierMedicalByCin(@PathVariable Integer cin) {
+        try {
+            DossierMedical dossierMedical = patientServices.getDossierMedicalByCin(cin);
+            return ResponseEntity.ok().body(dossierMedical);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
     @PreAuthorize("permitAll()")
-    @PutMapping("/updatePatient")
-    public Patient updatePatient(@RequestPart("patient") Patient patient,
-                                 @RequestPart(value = "pieceJointe", required = false) MultipartFile pieceJointe,
-                                 @RequestPart(value = "dossierMedical", required = false) MultipartFile dossierMedical) {
-        Patient p = patientServices.updatePatient(patient, pieceJointe, dossierMedical);
-        return p;
-    }*/
+    @PutMapping("/{cin}/ajouterObservation")
+    public ResponseEntity<String> ajouterObservation(@PathVariable Integer cin, @RequestBody String nouvelleObservation) {
+
+            DossierMedical dossierMedical = patientServices.ajouterObservation(cin, nouvelleObservation);
+
+            return ResponseEntity.ok("Observation ajoutée avec succès.");
+    }
     @PreAuthorize("permitAll()")
     @PostMapping("/addpatient")
     public Patient addPatient(@RequestBody Patient patient  ) {
@@ -84,19 +92,6 @@ public class PatientController {
     ) {
         // Appelez votre service pour effectuer la recherche dans la base de données
         return patientServices.rechercheMedecins(delegation,libelleService,libelleSpecialite);
-    }
-    @PreAuthorize("permitAll()")
-    @GetMapping("/passes/{cin}")
-    public ResponseEntity<List<RDV>> getRendezVousPassesPourPatient(@PathVariable("cin") Integer cin) {
-        List<RDV> rendezVousPasses = patientServices.getRendezVousPassesPourPatient(cin);
-        return ResponseEntity.ok(rendezVousPasses);
-    }
-
-    @PreAuthorize("permitAll()")
-    @GetMapping("/avenir/{cin}")
-    public ResponseEntity<List<RDV>> getRendezVousAVenirPourPatient(@PathVariable("cin") Integer cin) {
-        List<RDV> rendezVousAVenir = patientServices.getRendezVousAVenirPourPatient(cin);
-        return ResponseEntity.ok(rendezVousAVenir);
     }
 
     @PostMapping("/addDocument/{patientCIN}")
@@ -139,5 +134,36 @@ public class PatientController {
     @GetMapping("/patients/{cinPatient}/rdvs")
     public List<RDV> getRDVsForPatient(@PathVariable Integer cinPatient) {
         return patientServices.getRDVsForPatient(cinPatient);
+    }
+    // Endpoint pour envoyer un message
+    @PreAuthorize("permitAll()")
+    @PostMapping("/messagePatient/{nomPatient}")
+    public ResponseEntity<Messages> sendMessage(@PathVariable("nomPatient") String nomPatient, @RequestBody Messages message) {
+        Messages sentMessage = patientServices.sendMessage(nomPatient, message);
+
+        return ResponseEntity.ok().body(sentMessage);
+    }
+
+
+    // Endpoint pour répondre à un message
+/*    @PostMapping("/{email}/messages/reply")
+    public ResponseEntity<Messages> replyMessage(@PathVariable("email") String email,@RequestBody String reponse) {
+        // Vérifiez si l'email est valide
+        // Vérifiez si la réponse est valide
+
+        // Appelez la méthode replyMessage du service
+        Messages message = patientServices.replyMessage(email, reponse);
+
+        if (message == null) {
+            // Gérer le cas où le message auquel répondre n'a pas été trouvé
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }*/
+    @GetMapping("/pourcentagePayes")
+    public ResponseEntity<Double> getPourcentageRDVPayes() {
+        double pourcentage = patientServices.pourcentageRDVPayes();
+        return ResponseEntity.ok(pourcentage);
     }
 }

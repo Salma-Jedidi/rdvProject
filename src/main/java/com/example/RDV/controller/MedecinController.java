@@ -1,6 +1,7 @@
 package com.example.RDV.controller;
 
 import com.example.RDV.entities.EtatRDV;
+import com.example.RDV.entities.PaiementRDV;
 import com.example.RDV.entities.RDV;
 import com.example.RDV.services.Services;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +33,22 @@ public class MedecinController {
         services.marquerEtatRDV(idRDV, etat, cinMedecin);
         return ResponseEntity.ok().build();
     }
-
+    @PreAuthorize("permitAll()")
+    @PostMapping("/{idRDV}/paiementrdv")
+    public ResponseEntity<String> marquerEtatPaiement(@PathVariable("idRDV") Integer idRDV, @RequestParam PaiementRDV paiementRDV) {
+        services.marquerEtatPaiementRDV(idRDV, paiementRDV);
+        return ResponseEntity.ok("L'état de paiement du RDV a été mis à jour avec succès.");
+    }
+    @PreAuthorize("permitAll()")
+    @GetMapping("/payes")
+    public ResponseEntity<List<RDV>> getRDVPayes() {
+        List<RDV> rdvPayes = services.getRDVPayes();
+        return ResponseEntity.ok(rdvPayes);
+    }
+    @PreAuthorize("permitAll()")
+    @GetMapping("/nonPayes")
+    public ResponseEntity<List<RDV>> getRDVNonPayes() {
+        List<RDV> rdvNonPayes = services.getRDVNonPayes();
+        return ResponseEntity.ok(rdvNonPayes);
+    }
 }
