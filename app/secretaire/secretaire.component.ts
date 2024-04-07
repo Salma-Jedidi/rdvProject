@@ -11,6 +11,7 @@ import Chart from 'chart.js/auto';
 import { DossierMedical } from '../models/DossierMedical';
 import { Etablissement } from '../models/Etablissement';
 import { RendezvousService } from '../services/rendezvous.service';
+import { Observable, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-secretaire',
@@ -124,6 +125,10 @@ selectedSpecialite: any;
 rendezVousList: any;
 rdvPayes: RDV[]=[];
 rdvNonPayes: RDV[]=[];
+nombreRDVAcceptes: number = 0;
+nombreRDVAnnules: number = 0;
+nombreRDVEnInstant: number = 0;
+nombreRDVModifies: number = 0;
 
   constructor(private patientService: PatientService,private adminService:AdminService,private rdvService:RendezvousService) { }
   ngOnInit(): void {
@@ -134,6 +139,21 @@ rdvNonPayes: RDV[]=[];
     this.getAllPatients();
     this.getRDVPayes();
     this.getRDVNonPayes();
+    forkJoin([
+      this.patientService.getNombreRDVByEtat('ACCEPTER'),
+      this.patientService.getNombreRDVByEtat('ANNULER'),
+      this.patientService.getNombreRDVByEtat('ENINSTANT'),
+      this.patientService.getNombreRDVByEtat('MODIFIER')
+    ]).subscribe(([acceptes, annules, enInstant, modifies]) => {
+      this.nombreRDVAcceptes = acceptes;
+      this.nombreRDVAnnules = annules;
+      this.nombreRDVEnInstant = enInstant;
+      this.nombreRDVModifies = modifies;
+  
+      // Une fois que tous les nombres sont récupérés, appelez ngAfterViewInit pour créer les graphiques
+      this.ngAfterViewInit();
+    });
+    
   }
   getAllPatients() {
     this.adminService.getAllPatients().subscribe(
@@ -325,23 +345,25 @@ getTypeOfEtatRDV(): string {
   return typeof this.rdv.etatRDV;
 }
 
-pourcentageRDVPayes(): number {
-  // Logique pour calculer le pourcentage ici
-  // Exemple : si 75% des rendez-vous sont payés, retournez 75
-  return 75;
+pourcentageRDVPayes(): Observable<number> {
+  return this.patientService.getPourcentageRDVPayes();
 }
-
 ngAfterViewInit(): void {
+  this.createPieChart();
+ 
+    this.createBarChart();
 
-  // Création du pie chart
+}
+createPieChart(): void {
+
+  
+  this.pourcentageRDVPayes().subscribe((pourcentage: number) => { 
+    // Création du pie chart
   const canvas: any = document.getElementById('pieChart');
   const context = canvas.getContext('2d');
-  const pourcentage = this.pourcentageRDVPayes();
-
     // Création du pie chart
     const pieChartCanvas: any = document.getElementById('pieChart');
     const pieChartContext = pieChartCanvas.getContext('2d');
-
     new Chart(pieChartContext, {
       type: 'pie',
       data: {
@@ -355,35 +377,37 @@ ngAfterViewInit(): void {
         ]
       }
     });
-
-    // Création du bar chart
-    const barChartCanvas: any = document.getElementById('barChart');
-    const barChartContext = barChartCanvas.getContext('2d');
-
-    new Chart(barChartContext, {
-      type: 'bar',
-      data: {
-        labels: ['Accepté', 'Annulé', 'En Instant', 'Modifié'],
-        datasets: [
-          {
-            label: 'Nombre de RDVs',
-            data: [50, 10, 20, 10],
-            backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0'],
-            borderColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0'],
-            borderWidth: 1
-          }
-        ]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
+    });
+    
+}
+createBarChart(): void {
+  
+  const barChartCanvas: any = document.getElementById('barChart');
+  const barChartContext = barChartCanvas.getContext('2d');
+  new Chart(barChartContext, {
+    type: 'bar',
+    data: {
+      labels: ['Accepté', 'Annulé', 'En Instant', 'Modifié'],
+      datasets: [
+        {
+          label: 'Nombre de RDVs',
+          data: [2, 1, 1, 2],
+          backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0'],
+          borderColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0'],
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
         }
       }
-    });
-  }
-  
+    }
+  });
+}
+
   getRDVPayes(): void {
     this.rdvService.getRDVPayes().subscribe(data => {
       this.rdvPayes = data;
