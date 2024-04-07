@@ -83,9 +83,9 @@ public interface Services {
     public List<RDV> getRDVsForMedecin(Integer cinMedecin);
 
     //Accès au Dossier Médical :
-/*    public Optional<DossierMedical> afficherDossierMedical(Integer cinPatient, Integer cinMedecin);
-    public boolean modifierDossierMedical(Integer cinPatient, Integer cinMedecin, DossierMedical nouveauDossierMedical);
-*/
+    public DossierMedical getDossierMedicalByCin(Integer cinPatient);
+    public DossierMedical ajouterObservation(Integer cinPatient, String nouvelleObservation);
+
     public Optional<RDV> findRDVCommun(Integer cinPatient, Integer cinMedecin);
     //affichage du salaire
     public int afficherRevenueDuMedecin(Integer cinMedecin);
@@ -98,10 +98,13 @@ public interface Services {
     public void marquerEtatDuRDV(Integer idRDV, EtatRDV nouvelEtat, Integer cinPatient);
     public List<RDV> getRDVsForPatient(Integer cinPatient);
     //Accès au Dossier Médical :
-   /* public Optional<DossierMedical> afficherDossierMedical(Integer cinPatient);*/
+    public DossierMedical associerDossierMedicalAuPatient(Integer cinPatient,DossierMedical nouveauDossierMedical) ;
     //Effectuer des Paiements :
     public void choisirModePaiement(Integer cinPatient, ModePaiement modePaiementChoisi,TypeCaisse typeCaisse);
-
+    public void marquerEtatPaiementRDV(Integer idRDV,PaiementRDV paiementRDV);
+    public List<RDV> getRDVPayes();
+    public List<RDV> getRDVNonPayes();
+    public double pourcentageRDVPayes();
     public List<Medecin> findMedecinsBySpecialite(Integer idSpecialite);
 
     public List<Medecin> rechercheMedecins(String delegation, String libelleService, String libelleSpecialite);
@@ -110,5 +113,7 @@ public interface Services {
     public Document getDocument(Integer id);
     public Document addDocument(MultipartFile file,Integer patientCIN) throws IOException;
 
-
+//Messages
+//public Messages replyMessage(String nomPatientMessage, String reponse);
+    public Messages sendMessage(String nomPatient,Messages message);
 }

@@ -13,4 +13,6 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
     void deleteByCin(Integer cin);
 
     Patient findByNomPatient(String nomDuPatient);
+
+    Patient findByEmail(String email);
 }

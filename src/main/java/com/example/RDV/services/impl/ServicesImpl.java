@@ -5,6 +5,7 @@ import com.example.RDV.repository.*;
 import com.example.RDV.services.Services;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +40,10 @@ public class ServicesImpl implements Services {
     private UserRepository userRepository;
     @Autowired
     private  DocumentRepository documentRepository;
+    @Autowired
+    private DossierMedRepository dossierMedicalRepository;
+    @Autowired
+    private MessageRepository messagesRepository;
 
 //Fonctionnalités de l'Administrateur
     //Gerer les utilisateurs
@@ -218,12 +223,14 @@ public class ServicesImpl implements Services {
         Medecin medecinPublic = medecinRepository.findById(idMedecin).orElse(null);
 
         if (etablissement != null && medecinPublic != null) {
-            // Ajouter des logs pour déboguer
+
             System.out.println("Association en cours : Etablissement ID - " + idEtablissement +
                     ", Medecin ID - " + idMedecin);
 
-            medecinPublic.setEtablissement(etablissement);
+            // Ajouter l'établissement à la liste des établissements du médecin
+            medecinPublic.getEtablissements().add(etablissement);
             medecinPublic.setNomDeletablissement(etablissement.getLibEtablissement());
+
             medecinRepository.save(medecinPublic);
 
             // Ajouter des logs pour confirmer l'association
@@ -496,29 +503,36 @@ public class ServicesImpl implements Services {
         }
     }
     //Accès au Dossier Médical :
-  /* @Override
-    public Optional<DossierMedical> afficherDossierMedical(Integer cinPatient, Integer cinMedecin) {
-        Optional<RDV> rdvCommun = findRDVCommun(cinPatient, cinMedecin);
-
-        return rdvCommun.map(RDV::getPatient)
-                .map(Patient::getDossierMedical);
-    }
-
     @Override
-    public boolean modifierDossierMedical(Integer cinPatient, Integer cinMedecin, DossierMedical nouveauDossierMedical) {
-        Optional<RDV> rdvCommun = findRDVCommun(cinPatient, cinMedecin);
-
-        return rdvCommun.map(rdv -> {
-            rdv.getPatient().setDossierMedical(nouveauDossierMedical);
-            return true;
-        }).orElse(false); // Aucun RDV commun trouvé
+    public DossierMedical getDossierMedicalByCin(Integer cinPatient) {
+        Patient patient = patientRepository.findByCin(cinPatient);
+        if (patient != null && patient.getDossierMed() != null) {
+            return patient.getDossierMed();
+        } else {
+            throw new RuntimeException("Dossier médical pour le patient avec le numéro d'identification (cin) "
+                    + cinPatient + " non trouvé.");
+        }
     }
-*/
     @Override
     public Optional<RDV> findRDVCommun(Integer cinPatient, Integer cinMedecin) {
 
         Optional<RDV> rdvCommun = rdvRepository.findRDVCommun(cinPatient, cinMedecin);
         return rdvCommun;
+    }
+    @Override
+    public DossierMedical ajouterObservation(Integer cinPatient, String nouvelleObservation) {
+        DossierMedical dossier = dossierMedicalRepository.findByCinPatient(cinPatient);
+
+        if (dossier != null) {
+            String observationsActuelles = dossier.getObservations();
+            if (observationsActuelles == null) {
+                dossier.setObservations(nouvelleObservation);
+            } else {
+                dossier.setObservations(observationsActuelles + "\n" + nouvelleObservation);
+            }
+            dossierMedicalRepository.save(dossier);
+        }
+        return dossier;
     }
     //Affichage du salaire :
     //	Compter prixConsultation à une date
@@ -531,7 +545,8 @@ public class ServicesImpl implements Services {
             return 0;
         }
         Integer medecinId = medecin.getIdMedecin();
-        List<RDV> rdvs = rdvRepository.findByMedecin_IdMedecinAndEtatRDV(medecinId, EtatRDV.ACCEPTER);
+
+        List<RDV> rdvs = rdvRepository.findByMedecin_IdMedecinAndPaiementRDV(medecinId, PaiementRDV.Payes);
 
 
         int sommePrixConsultation = rdvs.stream()
@@ -582,14 +597,76 @@ public List<RDV> getRendezVousPassesPourPatient(Integer cin) {
 
     }
     //Accès au Dossier Médical :
- /*   @Override
-    public Optional<DossierMedical> afficherDossierMedical(Integer cinPatient) {
-        Patient patient = patientRepository.findByCIN(cinPatient);
-        return Optional.ofNullable(patient)
-                .map(Patient::getDossierMedical);
+    /*
+    @Override
+    public DossierMedical associerDossierMedicalAuPatient(Integer cinPatient) {
+        // Récupérer le patient à partir de son cin
+        Patient patient = patientRepository.findByCin(cinPatient);
+
+
+        if (patient == null) {
+            throw new RuntimeException("Patient avec le numéro d'identification (cin) " + cinPatient + " non trouvé.");
+        }
+
+        // Créer un nouveau dossier médical
+        DossierMedical nouveauDossierMedical = new DossierMedical();
+        // Assigne les attributs du patient au nouveau dossier médical
+        nouveauDossierMedical.setCinPatient(patient.getCin());
+        nouveauDossierMedical.setNomDuPatient(patient.getNomPatient());
+        nouveauDossierMedical.setDateNaissancePatient(patient.getDateNaissance());
+        nouveauDossierMedical.setTelephonePatient(patient.getTelephone());
+        // Assurez-vous que dossierMedical n'est pas null avant de l'utiliser
+
+            nouveauDossierMedical.setEtatClinique( nouveauDossierMedical.getEtatClinique());
+            nouveauDossierMedical.setGroupe_sanguin( nouveauDossierMedical.getGroupe_sanguin());
+            nouveauDossierMedical.setAllergie( nouveauDossierMedical.getAllergie());
+            nouveauDossierMedical.setPrescriptions_therapeutiques( nouveauDossierMedical.getPrescriptions_therapeutiques());
+            nouveauDossierMedical.setObservations( nouveauDossierMedical.getObservations());
+            nouveauDossierMedical.setResultats_examen( nouveauDossierMedical.getResultats_examen());
+
+        // Enregistrer le nouveau dossier médical
+        DossierMedical savedDossierMedical = dossierMedicalRepository.save(nouveauDossierMedical);
+        // Associer le nouveau dossier médical au patient
+        patient.setDossierMed(savedDossierMedical);
+        savedDossierMedical.setPatient(patient);
+        patientRepository.save(patient);
+        return savedDossierMedical;
     }
 */
+
+    @Override
+    public DossierMedical associerDossierMedicalAuPatient(Integer cinPatient,DossierMedical nouveauDossierMedical) {
+        // Récupérer le patient à partir de son cin
+        Patient patient = patientRepository.findByCin(cinPatient);
+        if (patient == null) {
+            throw new RuntimeException("Patient avec le numéro d'identification (cin) " + cinPatient + " non trouvé.");
+        }
+
+        // Assigne les attributs du patient au nouveau dossier médical
+        nouveauDossierMedical.setCinPatient(patient.getCin());
+        nouveauDossierMedical.setNomDuPatient(patient.getNomPatient());
+        nouveauDossierMedical.setDateNaissancePatient(patient.getDateNaissance());
+        nouveauDossierMedical.setTelephonePatient(patient.getTelephone());
+
+        nouveauDossierMedical.setEtatClinique( nouveauDossierMedical.getEtatClinique());
+        nouveauDossierMedical.setGroupe_sanguin( nouveauDossierMedical.getGroupe_sanguin());
+        nouveauDossierMedical.setAllergie( nouveauDossierMedical.getAllergie());
+        nouveauDossierMedical.setPrescriptions_therapeutiques( nouveauDossierMedical.getPrescriptions_therapeutiques());
+        nouveauDossierMedical.setObservations( nouveauDossierMedical.getObservations());
+        nouveauDossierMedical.setResultats_examen( nouveauDossierMedical.getResultats_examen());
+        // Associer le nouveau dossier médical au patient
+        nouveauDossierMedical.setPatient(patient);
+        patient.setDossierMed(nouveauDossierMedical);
+
+        dossierMedicalRepository.save(nouveauDossierMedical);
+
+        patientRepository.save(patient);
+        return nouveauDossierMedical;
+    }
+
+
     //choisir mode de paiement
+
     public void choisirModePaiement(Integer cinPatient, ModePaiement modePaiementChoisi,TypeCaisse typeCaisse) {
         Patient patient = patientRepository.findByCin(cinPatient);
 
@@ -601,8 +678,28 @@ public List<RDV> getRendezVousPassesPourPatient(Integer cin) {
         }
     }
 
+    @Override
+    public void marquerEtatPaiementRDV(Integer idRDV,PaiementRDV paiementRDV){
+            RDV rdv=rdvRepository.findById(idRDV).orElse(null);
+            if(rdv!=null)
+            {
+                rdv.setPaiementRDV(paiementRDV);
+                rdvRepository.save(rdv);
+            }
+    }
+    @Override
+    public List<RDV> getRDVPayes() {
+        return rdvRepository.findAll().stream()
+                .filter(rdv -> rdv.getPaiementRDV() == PaiementRDV.Payes)
+                .collect(Collectors.toList());
+    }
 
-
+    @Override
+    public List<RDV> getRDVNonPayes() {
+        return rdvRepository.findAll().stream()
+                .filter(rdv -> rdv.getPaiementRDV() == PaiementRDV.NonPayes)
+                .collect(Collectors.toList());
+    }
     public List<Medecin> findMedecinsBySpecialite(Integer idSpecialite) {
 
         Specialite specialite = specialiteRepository.findById(idSpecialite).orElse(null);
@@ -617,4 +714,58 @@ public List<RDV> getRendezVousPassesPourPatient(Integer cin) {
     public List<Medecin> rechercheMedecins(String delegation, String libelleService, String libelleSpecialite) {
         return medecinRepository.findByDelegationAndServiceAndSpecialite(delegation, libelleService, libelleSpecialite);
     }
+    //Messages
+    @Override
+    public Messages sendMessage(String nomPatient, Messages message) {
+        // Recherche du patient par nomPatient
+        Patient patient = patientRepository.findByNomPatient(nomPatient);
+        if (patient == null) {
+            throw new RuntimeException("Patient avec nomPatient'" + nomPatient + "' non trouvé.");
+        }
+
+        // Définir les autres informations du message
+        message.setNomPatientMessage(patient.getNomPatient());
+        message.setDateEnvoieMessage(LocalDate.now());
+        message.setPatient(patient);
+        Messages savedMessage = messagesRepository.save(message);
+
+        // Ajouter le message à la liste des messages associés au patient
+        List<Messages> patientMessages = patient.getMessages();
+        patientMessages.add(savedMessage);
+        patient.setMessages(patientMessages);
+        patientRepository.save(patient);
+
+        // Retourner le message enregistré
+        return savedMessage;
+    }
+
+/*
+    @Override
+    public Messages replyMessage(String nomPatient, String reponse) {
+        // Recherche du message par le nom du patient
+        Messages message = messagesRepository.findByPatientNomPatientMessage(nomPatient);
+        if (message == null) {
+            // Gérer le cas où le message n'est pas trouvé
+            return null;
+        }
+        // Mise à jour de la réponse
+        message.setReponseMessage(reponse);
+        message.setDateEnvoiReponse(LocalDate.now());
+
+        // Enregistrement de la réponse dans la base de données
+        return messagesRepository.save(message);
+    }*/
+    @Override
+public double pourcentageRDVPayes() {
+    // Compter le nombre de rendez-vous payés
+    long nbRDVPayes = rdvRepository.countByPaiementRDV(PaiementRDV.Payes);
+
+    // Compter le nombre total de rendez-vous
+    long nbTotalRDV = rdvRepository.count();
+
+    // Calculer le pourcentage de rendez-vous payés
+    double pourcentage = (double) nbRDVPayes / nbTotalRDV * 100;
+
+    return pourcentage;
+}
 }
