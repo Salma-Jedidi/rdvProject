@@ -35,8 +35,6 @@ public class Medecin {
     private ServiceMed serviceMed;
 
     @ManyToMany
-    @JoinColumn(name = "idEtablissement", referencedColumnName = "idEtablissement")
-
     private List<Etablissement> etablissements;
     @Enumerated
     private EtatMedecin etatMedecin;

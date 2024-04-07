@@ -17,7 +17,6 @@ public class Etablissement {
     @ManyToOne
     private Gouvernorat gouvernorat;
     @ManyToMany
-    @JoinColumn(name = "idMedecin")
     private List<Medecin> medecins;
 
 }

@@ -32,4 +32,6 @@ private String nomDelegation;
     private Patient patient;
     @Enumerated
     private EtatRDV etatRDV;
+    @Enumerated(EnumType.STRING)
+    private  PaiementRDV paiementRDV;
 }

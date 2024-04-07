@@ -1,6 +1,7 @@
 package com.example.RDV.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -23,7 +24,7 @@ public class DossierMedical {
     private Date dateNaissancePatient;
     private Integer  cinPatient;
     private Integer telephonePatient;
-
+    @JsonIgnore
     @OneToOne
     private Patient patient;
 

@@ -48,5 +48,8 @@ public class Patient  {
     private String password;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateCreation = LocalDate.now();
+    @JsonIgnore
+    @OneToMany
+    private List<Messages> messages;
 
 }
