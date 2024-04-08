@@ -348,6 +348,9 @@ getTypeOfEtatRDV(): string {
 pourcentageRDVPayes(): Observable<number> {
   return this.patientService.getPourcentageRDVPayes();
 }
+nombreRDVParEtat(etat:string):Observable<number>{
+  return this.patientService.getNombreRDVByEtat(etat);
+}
 ngAfterViewInit(): void {
   this.createPieChart();
  
@@ -384,6 +387,12 @@ createBarChart(): void {
   
   const barChartCanvas: any = document.getElementById('barChart');
   const barChartContext = barChartCanvas.getContext('2d');
+  forkJoin([
+    this.nombreRDVParEtat('ACCEPTER'),
+    this.nombreRDVParEtat('ANNULER'),
+    this.nombreRDVParEtat('ENINSTANT'),
+    this.nombreRDVParEtat('MODIFIER')
+  ]).subscribe(([acceptes, annules, enInstant, modifies]) => {
   new Chart(barChartContext, {
     type: 'bar',
     data: {
@@ -391,7 +400,7 @@ createBarChart(): void {
       datasets: [
         {
           label: 'Nombre de RDVs',
-          data: [2, 1, 1, 2],
+          data: [acceptes, annules, enInstant, modifies],
           backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0'],
           borderColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0'],
           borderWidth: 1
@@ -406,6 +415,7 @@ createBarChart(): void {
       }
     }
   });
+});
 }
 
   getRDVPayes(): void {
