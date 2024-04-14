@@ -49,7 +49,7 @@ public class Patient  {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateCreation = LocalDate.now();
     @JsonIgnore
-    @OneToMany
-    private List<Messages> messages;
+    @OneToMany(mappedBy = "patient")
+    private List<MessagePatient> messages;
 
 }

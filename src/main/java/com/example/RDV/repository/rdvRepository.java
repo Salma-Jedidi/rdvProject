@@ -48,4 +48,5 @@ public interface rdvRepository extends JpaRepository<RDV, Integer> {
     List<RDV> findByMedecin_IdMedecinAndPaiementRDV(Integer medecinId, PaiementRDV payes);
 
     long countByPaiementRDV(PaiementRDV paiementRDV);
+    Integer countByEtatRDV(EtatRDV etatRDV);
 }

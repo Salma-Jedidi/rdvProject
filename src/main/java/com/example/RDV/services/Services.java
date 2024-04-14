@@ -77,8 +77,7 @@ public interface Services {
 
  //Fonctionnalités du Médecin :
     //Voir les Rendez-vous :
-        public List<RDV> getRendezVousPassesPourMedecin(Integer idMedecin);
-        public List<RDV> getRendezVousAVenirPourMedecin(Integer idMedecin);
+
         public void marquerEtatRDV(Integer idRDV, EtatRDV nouvelEtat, Integer cinMedecin);
     public List<RDV> getRDVsForMedecin(Integer cinMedecin);
 
@@ -93,8 +92,7 @@ public interface Services {
 
 //Fonctionnalités du Patient :
     //Afficher les rdvs:
-    public List<RDV> getRendezVousPassesPourPatient(Integer cin);
-    public List<RDV> getRendezVousAVenirPourPatient(Integer cin);
+
     public void marquerEtatDuRDV(Integer idRDV, EtatRDV nouvelEtat, Integer cinPatient);
     public List<RDV> getRDVsForPatient(Integer cinPatient);
     //Accès au Dossier Médical :
@@ -105,6 +103,7 @@ public interface Services {
     public List<RDV> getRDVPayes();
     public List<RDV> getRDVNonPayes();
     public double pourcentageRDVPayes();
+    public double  getNombreRDVByEtat(EtatRDV etatRDV);
     public List<Medecin> findMedecinsBySpecialite(Integer idSpecialite);
 
     public List<Medecin> rechercheMedecins(String delegation, String libelleService, String libelleSpecialite);
@@ -115,5 +114,6 @@ public interface Services {
 
 //Messages
 //public Messages replyMessage(String nomPatientMessage, String reponse);
-    public Messages sendMessage(String nomPatient,Messages message);
+    public MessagePatient sendMessage(Integer cinPatient,String contenue, MessagePatient message);
+    public List<MessagePatient> afficherTousLesMessagesDesPatients();
 }

@@ -2,12 +2,10 @@ package com.example.RDV.controller;
 
 import com.example.RDV.entities.*;
 import com.example.RDV.services.Services;
-import jakarta.annotation.Resource;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.nio.file.Path;
+
 @RestController
 @RequestMapping("/api/v1/auth/patient")
 @RequiredArgsConstructor
@@ -137,9 +135,9 @@ public class PatientController {
     }
     // Endpoint pour envoyer un message
     @PreAuthorize("permitAll()")
-    @PostMapping("/messagePatient/{nomPatient}")
-    public ResponseEntity<Messages> sendMessage(@PathVariable("nomPatient") String nomPatient, @RequestBody Messages message) {
-        Messages sentMessage = patientServices.sendMessage(nomPatient, message);
+    @PostMapping("/messagePatient/{cinPatient}")
+    public ResponseEntity<MessagePatient> sendMessage(@PathVariable("cinPatient") Integer cinPatient,@RequestParam String contenue, @RequestBody MessagePatient message) {
+        MessagePatient sentMessage = patientServices.sendMessage(cinPatient,contenue, message);
 
         return ResponseEntity.ok().body(sentMessage);
     }
@@ -165,5 +163,16 @@ public class PatientController {
     public ResponseEntity<Double> getPourcentageRDVPayes() {
         double pourcentage = patientServices.pourcentageRDVPayes();
         return ResponseEntity.ok(pourcentage);
+    }
+    @GetMapping("/nbrParEtat")
+    public ResponseEntity<Double> getNombreRDVByEtat(EtatRDV etatRDV){
+        double  nbr= patientServices.getNombreRDVByEtat(etatRDV);
+        return  ResponseEntity.ok(nbr);
+    }
+    @PreAuthorize("permitAll()")
+    @GetMapping("/listMessages")
+    public List<MessagePatient> getAllMessages() {
+        List<MessagePatient> messagePatients=patientServices.afficherTousLesMessagesDesPatients();
+        return messagePatients;
     }
 }

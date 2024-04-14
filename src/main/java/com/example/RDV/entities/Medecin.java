@@ -35,6 +35,11 @@ public class Medecin {
     private ServiceMed serviceMed;
 
     @ManyToMany
+    @JoinTable(
+            name = "medecin_etablissement", // Nom de la table intermédiaire
+            joinColumns = @JoinColumn(name = "id_medecin"),
+            inverseJoinColumns = @JoinColumn(name = "id_etablissement")
+    )
     private List<Etablissement> etablissements;
     @Enumerated
     private EtatMedecin etatMedecin;

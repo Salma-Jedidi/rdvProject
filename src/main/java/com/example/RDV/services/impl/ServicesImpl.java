@@ -5,7 +5,6 @@ import com.example.RDV.repository.*;
 import com.example.RDV.services.Services;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -331,12 +330,41 @@ public class ServicesImpl implements Services {
 
     @Override
     public RDV addRDV(RDV rdv) {
+        // Retrieve the corresponding Medecin entity based on the name
+        Medecin medecin = medecinRepository.findByNomMedecin(rdv.getNomDuMedecin());
+        // Retrieve the corresponding Patient entity based on the name
+        Patient patient = patientRepository.findByNomPatient(rdv.getNomDuPatient());
+
+        // Set the associated Medecin and Patient entities to the RDV
+        rdv.setMedecin(medecin);
+        rdv.setPatient(patient);
+        rdv.setPaiementRDV(PaiementRDV.NonPayes);
+        // Save the RDV to associate it with the Medecin and Patient entities
         return rdvRepository.save(rdv);
     }
 
     @Override
     public RDV updateRDV(RDV rdv) {
-        return rdvRepository.save(rdv);
+        RDV existingRDV = rdvRepository.findById(rdv.getIdRDV()).orElse(null);
+        if (existingRDV != null) {
+            Medecin medecin = medecinRepository.findByNomMedecin(rdv.getNomDuMedecin());
+            // Retrieve the corresponding Patient entity based on the name
+            Patient patient = patientRepository.findByNomPatient(rdv.getNomDuPatient());
+
+            // Set the associated Medecin and Patient entities to the RDV
+            rdv.setMedecin(medecin);
+            rdv.setPatient(patient);
+            existingRDV.setDateRDV(rdv.getDateRDV());
+            existingRDV.setHeureRdv(rdv.getHeureRdv());
+            existingRDV.setRemarques(rdv.getRemarques());
+
+            // Save the updated RDV
+            return rdvRepository.save(existingRDV);
+        } else {
+            // Handle the case where the RDV to update is not found
+            // You can throw an exception or return null, depending on your requirements
+            return null;
+        }
     }
     @Override
     public void deleteRDV(Integer idRDV) {
@@ -456,24 +484,7 @@ public class ServicesImpl implements Services {
     }
 
     //Voir les Rendez-vous :
-    @Override
-    public List<RDV> getRendezVousPassesPourMedecin(Integer cin) {
-        Medecin medecin = medecinRepository.findByCinMedecin(cin);
-        if (medecin != null) {
-            Date currentDate = new Date();
-            return rdvRepository.findRendezVousPassesPourMedecin(medecin, currentDate);
-        }
-        return Collections.emptyList();
-    }
-    @Override
-    public List<RDV> getRendezVousAVenirPourMedecin(Integer cin) {
-        Medecin medecin = medecinRepository.findByCinMedecin(cin);
-        if (medecin != null) {
-            Date currentDate = new Date();
-            return rdvRepository.findRendezVousAVenirPourMedecin(medecin, currentDate);
-        }
-        return Collections.emptyList();
-    }
+
     @Override
     public List<RDV> getRDVsForMedecin(Integer cinMedecin) {
         Medecin medecin = medecinRepository.findByCinMedecin(cinMedecin);
@@ -557,29 +568,6 @@ public class ServicesImpl implements Services {
     }
 
 //Fonctionnalités du Patient :
-    //Voir les Rendez-vous (passes et à venir)
-@Override
-public List<RDV> getRendezVousPassesPourPatient(Integer cin) {
-    Patient patient = patientRepository.findByCin(cin);
-    if (patient != null) {
-        Integer patientId = patient.getIdPatient();
-
-        Date currentDate = new Date();
-        return rdvRepository.findRendezVousPassesPourPatientById(patientId, currentDate);
-    }
-    return Collections.emptyList();
-}
-
-
-    public List<RDV> getRendezVousAVenirPourPatient(Integer cin) {
-        Patient patient = patientRepository.findByCin(cin);
-        if (patient != null) {
-            Integer patientId = patient.getIdPatient();
-            Date currentDate = new Date();
-            return rdvRepository.findRendezVousAVenirPourPatient(patientId, currentDate);
-        }
-        return Collections.emptyList();
-    }
 
     @Override
     public void marquerEtatDuRDV(Integer idRDV, EtatRDV nouvelEtat, Integer cinPatient) {
@@ -597,42 +585,6 @@ public List<RDV> getRendezVousPassesPourPatient(Integer cin) {
 
     }
     //Accès au Dossier Médical :
-    /*
-    @Override
-    public DossierMedical associerDossierMedicalAuPatient(Integer cinPatient) {
-        // Récupérer le patient à partir de son cin
-        Patient patient = patientRepository.findByCin(cinPatient);
-
-
-        if (patient == null) {
-            throw new RuntimeException("Patient avec le numéro d'identification (cin) " + cinPatient + " non trouvé.");
-        }
-
-        // Créer un nouveau dossier médical
-        DossierMedical nouveauDossierMedical = new DossierMedical();
-        // Assigne les attributs du patient au nouveau dossier médical
-        nouveauDossierMedical.setCinPatient(patient.getCin());
-        nouveauDossierMedical.setNomDuPatient(patient.getNomPatient());
-        nouveauDossierMedical.setDateNaissancePatient(patient.getDateNaissance());
-        nouveauDossierMedical.setTelephonePatient(patient.getTelephone());
-        // Assurez-vous que dossierMedical n'est pas null avant de l'utiliser
-
-            nouveauDossierMedical.setEtatClinique( nouveauDossierMedical.getEtatClinique());
-            nouveauDossierMedical.setGroupe_sanguin( nouveauDossierMedical.getGroupe_sanguin());
-            nouveauDossierMedical.setAllergie( nouveauDossierMedical.getAllergie());
-            nouveauDossierMedical.setPrescriptions_therapeutiques( nouveauDossierMedical.getPrescriptions_therapeutiques());
-            nouveauDossierMedical.setObservations( nouveauDossierMedical.getObservations());
-            nouveauDossierMedical.setResultats_examen( nouveauDossierMedical.getResultats_examen());
-
-        // Enregistrer le nouveau dossier médical
-        DossierMedical savedDossierMedical = dossierMedicalRepository.save(nouveauDossierMedical);
-        // Associer le nouveau dossier médical au patient
-        patient.setDossierMed(savedDossierMedical);
-        savedDossierMedical.setPatient(patient);
-        patientRepository.save(patient);
-        return savedDossierMedical;
-    }
-*/
 
     @Override
     public DossierMedical associerDossierMedicalAuPatient(Integer cinPatient,DossierMedical nouveauDossierMedical) {
@@ -712,25 +664,48 @@ public List<RDV> getRendezVousPassesPourPatient(Integer cin) {
         }
     }
     public List<Medecin> rechercheMedecins(String delegation, String libelleService, String libelleSpecialite) {
-        return medecinRepository.findByDelegationAndServiceAndSpecialite(delegation, libelleService, libelleSpecialite);
+        if (delegation == null && libelleService == null && libelleSpecialite == null) {
+            return medecinRepository.findAll();
+        } else if (delegation != null && libelleService == null && libelleSpecialite == null) {
+            return medecinRepository.findByDelegation(delegation);
+        } else if (delegation == null && libelleService == null && libelleSpecialite != null) {
+            return medecinRepository.findBySpecialite(libelleSpecialite);
+        } else {
+            if (delegation == null) {
+                return medecinRepository.findByServiceAndSpecialite(libelleService, libelleSpecialite);
+            } else if (libelleService == null) {
+                return medecinRepository.findByDelegationAndSpecialite(delegation, libelleSpecialite);
+            } else if (libelleSpecialite == null) {
+                return medecinRepository.findByDelegationAndService(delegation, libelleService);
+            } else {
+                return medecinRepository.findByDelegationAndServiceAndSpecialite(delegation, libelleService, libelleSpecialite);
+            }
+        }
     }
+
+
+    /*    public List<Medecin> rechercheMedecins(String delegation, String libelleService, String libelleSpecialite) {
+        return medecinRepository.findByDelegationAndServiceAndSpecialite(delegation, libelleService, libelleSpecialite);
+    }*/
     //Messages
     @Override
-    public Messages sendMessage(String nomPatient, Messages message) {
+    public MessagePatient sendMessage(Integer cinPatient,String contenue, MessagePatient message) {
         // Recherche du patient par nomPatient
-        Patient patient = patientRepository.findByNomPatient(nomPatient);
+        Patient patient = patientRepository.findByCin(cinPatient);
         if (patient == null) {
-            throw new RuntimeException("Patient avec nomPatient'" + nomPatient + "' non trouvé.");
+            throw new RuntimeException("Patient avec cin Patient'" + cinPatient + "' non trouvé.");
         }
 
         // Définir les autres informations du message
         message.setNomPatientMessage(patient.getNomPatient());
+       message.setEmail(patient.getEmail());
+        message.setContenueMessage(contenue);
         message.setDateEnvoieMessage(LocalDate.now());
         message.setPatient(patient);
-        Messages savedMessage = messagesRepository.save(message);
+        MessagePatient savedMessage = messagesRepository.save(message);
 
         // Ajouter le message à la liste des messages associés au patient
-        List<Messages> patientMessages = patient.getMessages();
+        List<MessagePatient> patientMessages = patient.getMessages();
         patientMessages.add(savedMessage);
         patient.setMessages(patientMessages);
         patientRepository.save(patient);
@@ -768,4 +743,19 @@ public double pourcentageRDVPayes() {
 
     return pourcentage;
 }
+    @Override
+    public double  getNombreRDVByEtat(EtatRDV etatRDV) {
+        // Comptez le nombre de rendez-vous dans l'état spécifié
+        double  nbRDVParEtat = rdvRepository.countByEtatRDV(etatRDV);
+
+        // Comptez le nombre total de rendez-vous
+        double  nbTotalRDVEtat = rdvRepository.count();
+
+        return nbRDVParEtat;
+    }
+    @Override
+    public List<MessagePatient> afficherTousLesMessagesDesPatients() {
+        List<MessagePatient> messages = messagesRepository.findAll();
+        return messages;
+    }
 }

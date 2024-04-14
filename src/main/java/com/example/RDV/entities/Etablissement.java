@@ -16,7 +16,7 @@ public class Etablissement {
     private String libEtablissement;
     @ManyToOne
     private Gouvernorat gouvernorat;
-    @ManyToMany
+    @ManyToMany(mappedBy = "etablissements")
     private List<Medecin> medecins;
 
 }
