@@ -1,11 +1,11 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpEvent, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { Patient } from '../models/Patient';
 import { Medecin } from '../models/Medecin';
 import { RDV } from '../models/RDV';
 import { DossierMedical } from '../models/DossierMedical';
-import { Messages } from '../models/Messages';
+import { MessagePatient } from '../models/MessagePatient';
 
 @Injectable({
   providedIn: 'root'
@@ -87,21 +87,21 @@ export class PatientService {
   ajouterObservation(cin: number, nouvelleObservation: string): Observable<string> {
     return this.http.put<string>(`${this.apiUrl}/${cin}/ajouterObservation`, nouvelleObservation);
   }
+  sendMessage(cinPatient: number, contenue: string, messagePatient: MessagePatient): Observable<MessagePatient> {
 
-  sendMessage(nomPatient: string, messagePatient: Messages): Observable<Messages> {
-    // Construire l'URL avec le nom du patient
-    const url = `${this.apiUrl}/messagePatient/${nomPatient}`;
-  
-    // Effectuer la requête POST avec l'URL construite
-    return this.http.post<Messages>(url, messagePatient);
-}
-
-
-  replyMessage(email: string, reponse: string,message:Messages): Observable<Messages> {
-    return this.http.post<Messages> (`${this.apiUrl}/patients/${email}/messages/reply`, message);
+    return this.http.post<MessagePatient>(`${this.apiUrl}/messagePatient/${cinPatient}?contenue=${contenue}`, messagePatient);
+  }
+  replyMessage(email: string, reponse: string,message:MessagePatient): Observable<MessagePatient> {
+    return this.http.post<MessagePatient> (`${this.apiUrl}/patients/${email}/messages/reply`, message);
   }
   getPourcentageRDVPayes(): Observable<number> {
-    
     return this.http.get<number>(`${this.apiUrl}/pourcentagePayes`);
   }
+  getNombreRDVByEtat(etat: string): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/nbrParEtat?etatRDV=${etat}`);
+  }
+  getAllMessages(): Observable<MessagePatient[]> {
+    return this.http.get<MessagePatient[]>(`${this.apiUrl}/listMessages`);
+  }
+
 }

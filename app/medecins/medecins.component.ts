@@ -78,6 +78,8 @@ delegations: Delegation[] = [];
   constructor(private adminService: AdminService) {
    
   }
+  selectedMedecin: any;
+
 
   ngOnInit() {
     this.setupEventListeners();
@@ -106,7 +108,9 @@ delegations: Delegation[] = [];
     document.querySelector(".products-area-wrapper")?.classList.add("tableView");
   });
 }
-
+selectMedecin(medecin: Medecin):void {
+  this.medecin = medecin;
+}
 addMedecin() {
     this.adminService.addMedecin(this.medecin).subscribe(
       (addedMedecin: Medecin) => {

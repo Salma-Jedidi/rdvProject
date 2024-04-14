@@ -223,8 +223,9 @@ nombreRDVModifies: number = 0;
       );
   }
 
-addRDV() {
-  // Add RDV
+
+addRDV() :void {
+  this.rdv.paiementRDV = 'NonPayes';
   this.adminService.addRDV(this.rdv).subscribe(
     (addedRDV: RDV) => {
       console.log('RDV added successfully:', addedRDV);
@@ -233,7 +234,7 @@ addRDV() {
       this.adminService.assignPatientAndMedecinTordv(this.rdv.nomDuPatient, this.rdv.nomDuMedecin, addedRDV).subscribe(
         () => {
           console.log('Association successful.');
-         
+          // Additional logic if needed
         },
         (error) => {
           console.error('Error associating RDV with Patient:', error);
@@ -245,13 +246,8 @@ addRDV() {
     }
   );
 }
-onDelegationChange(): void {
-  console.log('Selected Delegation:', this.rdv.nomDelegation);
-  // You can add more logic if needed
-}
-
-
-updateRDV() {
+updateRDV() :void{
+  this.rdv.paiementRDV = 'NonPayes';
   // Assuming you have an RDV object ready to be updated
   this.adminService.updateRDV(this.rdv).subscribe(
     (updatedRDV: RDV) => {
@@ -262,6 +258,13 @@ updateRDV() {
     }
   );
 }
+onDelegationChange(): void {
+  console.log('Selected Delegation:', this.rdv.nomDelegation);
+  // You can add more logic if needed
+}
+
+
+
 
 deleteRDV(idRDV: number) {
   this.adminService.deleteRDV(idRDV).subscribe(

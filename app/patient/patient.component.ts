@@ -7,7 +7,11 @@ import { Delegation } from '../models/Delegation';
 import { Medecin } from '../models/Medecin';
 import { Specialite } from '../models/Specialite';
 import { ServiceMed } from '../models/ServiceMed';
-import { Document } from '../models/Document';
+import { MessagePatient } from '../models/MessagePatient';
+import { RendezvousService } from '../services/rendezvous.service';
+import { Observable } from 'rxjs';
+import { HttpHeaders } from '@angular/common/http';
+
 declare var $: any; 
 
 @Component({
@@ -42,7 +46,8 @@ export class PatientComponent  implements OnInit {
       etatRDV:'',
       nomDuPatient:'',
       nomDuMedecin:'',
-      nomDelegation:''
+      nomDelegation:'',
+      paiementRDV:''
     };
     medecin: Medecin = {
       idMedecin: 0,
@@ -56,6 +61,15 @@ export class PatientComponent  implements OnInit {
       nomDeletablissement: '',
       delegationMedecin: ''
     };
+    messagePatient:MessagePatient={
+      idMessage:0,
+      nomPatientMessage:'',
+      contenueMessage:'',
+      reponseMessage:'',
+      dateEnvoieMessage:undefined,
+      dateEnvoiReponse:undefined,
+      email:''
+    }
      rdvs: RDV[] = [];
      rdvPasses: RDV[] = [];
      rdvAVenir: RDV[] = [];
@@ -85,14 +99,15 @@ export class PatientComponent  implements OnInit {
     };
   
     selectedDelegation: any;
-  constructor(private patientService: PatientService,private adminService:AdminService) { }
+    contenue: string = '';
+  constructor(private patientService: PatientService,private adminService:AdminService,private rdvService:RendezvousService) { }
   ngOnInit(): void {
     this.adminService.getAllDelegations().subscribe(delegations => this.delegations = delegations);
     this.adminService.getAllSpecialite().subscribe(specialites => this.specialites =specialites);
     this.adminService.getAllServiceMedicales().subscribe(services=>this.services=services);
   //  this.adminService.getRDVsForPatient().subscribe((RDVs: RDV[]) => this.rdvs = RDVs);
 
-   
+    this.sendMessage();
   }
   choisirModePaiement(): void {
     this.patientService.choisirModePaiement(this.patient.cin, this.patient.modePaiement, this.patient.typeCaisse).subscribe(response => {
@@ -139,41 +154,6 @@ export class PatientComponent  implements OnInit {
     );
   }
   
-  /* onPieceJointeChange(event: any) {
-    const file: File | null = event.target.files?.[0]; // Récupérer le premier fichier
-  
-    if (file) {
-      const fileReader = new FileReader();
-      fileReader.onload = () => {
-        const pieceJointe: Document = {
-          content: new Uint8Array(fileReader.result as ArrayBuffer),
-          fileName: file.name,
-          fileType: file.type,
-        };
-  
-        this.patient.pieceJointe = pieceJointe;
-      };
-      fileReader.readAsArrayBuffer(file);
-    }
-  }
-  
-  onDossierMedicalChange(event: any) {
-    const file: File | null = event.target.files?.[0]; // Récupérer le premier fichier
-  
-    if (file) {
-      const fileReader = new FileReader();
-      fileReader.onload = () => {
-        const dossierMedical: Document = {
-          content: new Uint8Array(fileReader.result as ArrayBuffer),
-          fileName: file.name,
-          fileType: file.type,
-        };
-  
-        this.patient.dossierMedical = dossierMedical;
-      };
-      fileReader.readAsArrayBuffer(file);
-    }
-  } */
   
 updateCard() {
   const firstGroup = (<HTMLInputElement>document.getElementById("first-group")).value || 'XXXX';
@@ -219,8 +199,8 @@ updateCard() {
   }
 }
 
-addRDV() {
-  // Add RDV
+addRDV() :void {
+  this.rdv.paiementRDV = 'NonPayes';
   this.adminService.addRDV(this.rdv).subscribe(
     (addedRDV: RDV) => {
       console.log('RDV added successfully:', addedRDV);
@@ -241,13 +221,8 @@ addRDV() {
     }
   );
 }
-onDelegationChange(): void {
-  console.log('Selected Delegation:', this.rdv.nomDelegation);
-  // You can add more logic if needed
-}
-
-
-updateRDV() {
+updateRDV() :void{
+  this.rdv.paiementRDV = 'NonPayes';
   // Assuming you have an RDV object ready to be updated
   this.adminService.updateRDV(this.rdv).subscribe(
     (updatedRDV: RDV) => {
@@ -258,7 +233,10 @@ updateRDV() {
     }
   );
 }
-
+onDelegationChange(): void {
+  console.log('Selected Delegation:', this.rdv.nomDelegation);
+  // You can add more logic if needed
+}
 deleteRDV(idRDV: number) {
   this.adminService.deleteRDV(idRDV).subscribe(
     () => {
@@ -272,16 +250,11 @@ deleteRDV(idRDV: number) {
 searchMedecin(): void {
   const { delegationMedecin, libelleService, libelleSpecialite } = this.medecin;
 
-  // Vérifiez que les valeurs sont définies avant d'effectuer la recherche
-  if (delegationMedecin && libelleService && libelleSpecialite) {
+
     this.patientService.searchMedecin(delegationMedecin, libelleService, libelleSpecialite)
       .subscribe(response => {
         this.medecins = response;
-      });
-  } else {
-    // Gérer le cas où l'une des valeurs est manquante
-    console.error("Veuillez remplir tous les champs.");
-  }
+      })
 }
 loadRendezVousPasses(cinPatient: number): void {
   this.patientService.getRendezVousPassesPourPatient(cinPatient)
@@ -392,8 +365,44 @@ getEtatRDVChoice(etatRDV: number): string {
 getTypeOfEtatRDV(): string {
   return typeof this.rdv.etatRDV;
 }
+sendMessage(): void {
+  // Vérifier si le contenu du message est vide
+  if (!this.messagePatient.contenueMessage.trim()) {
+    console.error('Le contenu du message est vide.');
+   
+    return;
+  }
+
+  this.patientService.sendMessage(this.patient.cin, this.messagePatient.contenueMessage, this.messagePatient)
+    .subscribe(
+      (messagePatient: MessagePatient) => {
+        console.log('Message envoyé avec succès :', messagePatient);
+        // Gérer la réponse si nécessaire
+      },
+      error => {
+        console.error('Erreur lors de l\'envoi du message :', error);
+        // Gérer l'erreur si nécessaire
+      }
+    );
+}
+
+
+ marquerPaiement(): void {
+  this.rdv.paiementRDV = 'Payes';
+    this.rdvService.marquerPaiement(this.rdv.idRDV, this.rdv.paiementRDV).subscribe(response => {
+      console.log(response);
+   
+    });
+  }
+
 fillFormFields(rdv: RDV): void {
   this.rdv.nomDuPatient = rdv.nomDuPatient;
   this.rdv.nomDuMedecin = rdv.nomDuMedecin;
+  this.rdv.idRDV=rdv.idRDV;
+}
+fillFormFieldPatient(patient:Patient): void {
+  this.patient.cin=patient.cin;
+  this.patient.nomPatient=patient.nomPatient;
+  this.patient.email=patient.email;
 }
 }

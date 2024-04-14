@@ -64,8 +64,8 @@ rdv: RDV = {
   paiementRDV:''
 };
 rdvs: RDV[] = [];
-addRDV() {
-  // Add RDV
+addRDV() :void {
+  this.rdv.paiementRDV = 'NonPayes';
   this.adminService.addRDV(this.rdv).subscribe(
     (addedRDV: RDV) => {
       console.log('RDV added successfully:', addedRDV);
@@ -86,8 +86,8 @@ addRDV() {
     }
   );
 }
-
-updateRDV() {
+updateRDV() :void{
+  this.rdv.paiementRDV = 'NonPayes';
   // Assuming you have an RDV object ready to be updated
   this.adminService.updateRDV(this.rdv).subscribe(
     (updatedRDV: RDV) => {
@@ -142,7 +142,11 @@ getTypeOfEtatRDV(): string {
   return typeof this.rdv.etatRDV;
 }
 
-
+fillFormFields(rdv: RDV): void {
+  this.rdv.nomDuPatient = rdv.nomDuPatient;
+  this.rdv.nomDuMedecin = rdv.nomDuMedecin;
+  this.rdv.idRDV=rdv.idRDV;
+}
 
 
 

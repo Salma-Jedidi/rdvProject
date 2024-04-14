@@ -389,6 +389,7 @@ textarea {
 
 .mt-2 {
   margin-top: 8px !important;
+  border-radius:5px;
 }
 
 .ml-1 {
