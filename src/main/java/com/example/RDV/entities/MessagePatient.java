@@ -13,14 +13,15 @@ public class MessagePatient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idMessage;
     private String nomPatientMessage;
-    private String nomRepondMessage;
+    private String email;
     private String contenueMessage;
     private String reponseMessage;
-    private String email;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateEnvoieMessage = LocalDate.now();
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateEnvoiReponse ;
+    private String nomRepondMessage;
     @ManyToOne
     @JoinColumn(name = "idPatient")
     private Patient patient;

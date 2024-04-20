@@ -135,30 +135,22 @@ public class PatientController {
     }
     // Endpoint pour envoyer un message
     @PreAuthorize("permitAll()")
-    @PostMapping("/messagePatient/{cinPatient}")
-    public ResponseEntity<MessagePatient> sendMessage(@PathVariable("cinPatient") Integer cinPatient,@RequestParam String contenue, @RequestBody MessagePatient message) {
-        MessagePatient sentMessage = patientServices.sendMessage(cinPatient,contenue, message);
+    @PostMapping("/messagePatient")
+    public MessagePatient sendMessage(@RequestBody MessagePatient messagePatient) {
+        MessagePatient sentMessage = patientServices.sendMessage(messagePatient);
 
-        return ResponseEntity.ok().body(sentMessage);
+        return sentMessage;
     }
 
-
     // Endpoint pour répondre à un message
-/*    @PostMapping("/{email}/messages/reply")
-    public ResponseEntity<Messages> replyMessage(@PathVariable("email") String email,@RequestBody String reponse) {
-        // Vérifiez si l'email est valide
-        // Vérifiez si la réponse est valide
+   @PutMapping("/reply")
+    public MessagePatient replyMessage(@RequestBody MessagePatient messagePatient) {
 
-        // Appelez la méthode replyMessage du service
-        Messages message = patientServices.replyMessage(email, reponse);
+         MessagePatient reponseMessage = patientServices.replyMessage(messagePatient);
 
-        if (message == null) {
-            // Gérer le cas où le message auquel répondre n'a pas été trouvé
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return reponseMessage;
+    }
 
-        return new ResponseEntity<>(message, HttpStatus.OK);
-    }*/
     @GetMapping("/pourcentagePayes")
     public ResponseEntity<Double> getPourcentageRDVPayes() {
         double pourcentage = patientServices.pourcentageRDVPayes();

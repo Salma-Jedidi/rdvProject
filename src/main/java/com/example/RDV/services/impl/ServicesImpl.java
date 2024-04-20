@@ -348,21 +348,20 @@ public class ServicesImpl implements Services {
         RDV existingRDV = rdvRepository.findById(rdv.getIdRDV()).orElse(null);
         if (existingRDV != null) {
             Medecin medecin = medecinRepository.findByNomMedecin(rdv.getNomDuMedecin());
-            // Retrieve the corresponding Patient entity based on the name
+
             Patient patient = patientRepository.findByNomPatient(rdv.getNomDuPatient());
 
-            // Set the associated Medecin and Patient entities to the RDV
+
             rdv.setMedecin(medecin);
             rdv.setPatient(patient);
             existingRDV.setDateRDV(rdv.getDateRDV());
             existingRDV.setHeureRdv(rdv.getHeureRdv());
             existingRDV.setRemarques(rdv.getRemarques());
 
-            // Save the updated RDV
+
             return rdvRepository.save(existingRDV);
         } else {
-            // Handle the case where the RDV to update is not found
-            // You can throw an exception or return null, depending on your requirements
+
             return null;
         }
     }
@@ -689,47 +688,46 @@ public class ServicesImpl implements Services {
     }*/
     //Messages
     @Override
-    public MessagePatient sendMessage(Integer cinPatient,String contenue, MessagePatient message) {
-        // Recherche du patient par nomPatient
-        Patient patient = patientRepository.findByCin(cinPatient);
+    public MessagePatient sendMessage(MessagePatient messagePatient) {
+        // Récupérer le patient correspondant au nom dans le message
+        Patient patient = patientRepository.findByNomPatient(messagePatient.getNomPatientMessage());
         if (patient == null) {
-            throw new RuntimeException("Patient avec cin Patient'" + cinPatient + "' non trouvé.");
+            // Gérer le cas où le patient n'est pas trouvé
+            throw new EntityNotFoundException("Patient not found for name: " + messagePatient.getNomPatientMessage());
         }
 
-        // Définir les autres informations du message
-        message.setNomPatientMessage(patient.getNomPatient());
-       message.setEmail(patient.getEmail());
-        message.setContenueMessage(contenue);
-        message.setDateEnvoieMessage(LocalDate.now());
-        message.setPatient(patient);
-        MessagePatient savedMessage = messagesRepository.save(message);
+        // Associer le patient au message
+        messagePatient.setPatient(patient);
 
-        // Ajouter le message à la liste des messages associés au patient
-        List<MessagePatient> patientMessages = patient.getMessages();
-        patientMessages.add(savedMessage);
-        patient.setMessages(patientMessages);
-        patientRepository.save(patient);
+        // Sauvegarder le message dans la base de données
+        MessagePatient savedMessage = messagesRepository.save(messagePatient);
 
         // Retourner le message enregistré
         return savedMessage;
     }
 
-/*
+
+
+
+
     @Override
-    public Messages replyMessage(String nomPatient, String reponse) {
-        // Recherche du message par le nom du patient
-        Messages message = messagesRepository.findByPatientNomPatientMessage(nomPatient);
-        if (message == null) {
-            // Gérer le cas où le message n'est pas trouvé
+    public MessagePatient replyMessage(MessagePatient messagePatient) {
+
+        MessagePatient existingMessage = messagesRepository.findById(messagePatient.getIdMessage()).orElse(null);
+
+        if (existingMessage != null) {
+
+            existingMessage.setReponseMessage(messagePatient.getReponseMessage());
+            existingMessage.setDateEnvoiReponse(LocalDate.now());
+            existingMessage.setNomRepondMessage(messagePatient.getNomRepondMessage());
+
+            return messagesRepository.save(existingMessage);
+        } else {
+
             return null;
         }
-        // Mise à jour de la réponse
-        message.setReponseMessage(reponse);
-        message.setDateEnvoiReponse(LocalDate.now());
+    }
 
-        // Enregistrement de la réponse dans la base de données
-        return messagesRepository.save(message);
-    }*/
     @Override
 public double pourcentageRDVPayes() {
     // Compter le nombre de rendez-vous payés

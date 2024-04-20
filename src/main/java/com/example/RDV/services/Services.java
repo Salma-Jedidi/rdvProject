@@ -113,7 +113,7 @@ public interface Services {
     public Document addDocument(MultipartFile file,Integer patientCIN) throws IOException;
 
 //Messages
-//public Messages replyMessage(String nomPatientMessage, String reponse);
-    public MessagePatient sendMessage(Integer cinPatient,String contenue, MessagePatient message);
+    public MessagePatient replyMessage(MessagePatient messagePatient);
+    public MessagePatient sendMessage(MessagePatient messagePatient);
     public List<MessagePatient> afficherTousLesMessagesDesPatients();
 }
