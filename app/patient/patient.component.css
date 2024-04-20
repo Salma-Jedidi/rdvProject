@@ -1828,12 +1828,13 @@ transform: translateY(-0.15em);
 	margin-left: 10%;
 	width: 90%;
 	height: 100vh;
-	display: grid;
+	display: flex;
 	place-content: center;
 	color: white;
 	text-shadow: 0 1px 0 #000;
+	display: flex;
 	justify-content: center;
-	align-items:center;
+	align-items: center;
 	display: flex;
 	--border-angle: 0;
 	--main-bg: conic-gradient(
@@ -1871,3 +1872,9 @@ transform: translateY(-0.15em);
 	
 	position: fixed;
   }
+  .box h1 {
+    margin: 10px;
+    align-self: flex-start; /* Aligner le titre en haut */
+	text-align: center; 
+	
+}

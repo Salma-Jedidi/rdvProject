@@ -74,10 +74,13 @@
               
               <!-- Afficher les résultats -->
             </div>
-            <h1 >Veuillez laisser un commentaire</h1>
+         <h1 style="color: #879bc6;justify-content: center;
+              font-size: 4em;">Veuillez laisser un commentaire, un avis ou une question</h1>
             <div class="box">
+              <br>
+             
               <div class="container d-flex justify-content-center align-items-center">
-            
+         
                 <!-- // SVG
                           from: https://www.freepik.com/free-vector/new-message-concept-landing-page_5777076.htm 
                   -------------------------------------------------------------
@@ -532,42 +535,52 @@
                   -------------------------------------------------------------
                   ------------------------------------------------------------>
             
-                <form>
-                  <h1 class="title text-center mb-4">Veuillez nous contacter</h1>
-                  <!-- <div class="form-group position-relative">
-                    <label for="formName" class="d-block">
+            <!--       <form >
+                    <h1 class="title text-center mb-4">Veuillez nous contacter</h1>
+                  
+                
+                    <div class="form-group position-relative">
+                      <label for="nomPatientMessage" class="d-block">
+                        Nom:
                       </label>
-                  <input  id="cinPatient" placeholder="CIN" [(ngModel)]="patient.cin" (click)="fillFormFieldPatient(patient)" />
-                  </div> -->
-                  <!-- Name -->
-                  <div class="form-group position-relative">
-                    <label for="formName" class="d-block">
-                      <i class="icon" data-feather="user"></i>
-                      <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#325185" d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></svg>
-                    </label>
-                    <input id="nomPatient" type="text" class="form-control form-control-lg thick" placeholder="Nom"  [(ngModel)]="patient.nomPatient"  (click)="fillFormFieldPatient(patient)" >
-                  </div>
-            
-                  <!-- E-mail -->
-                  <div class="form-group position-relative">
-                    <label for="formEmail" class="d-block">
-                      <i class="icon" data-feather="mail"></i>
-                      <svg class="icon" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#244994" d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg></label>
-                    <input type="email" id="email" class="form-control form-control-lg thick" placeholder="E-mail" (click)="fillFormFieldPatient(patient)">
-                  </div>
-            
-                  <!-- Message -->
-                  <div class="form-group message">
-                    <textarea id="contenueMessage" type="text" class="form-control form-control-lg" rows="7" [(ngModel)]="messagePatient.contenueMessage"
-                      placeholder="veuillez laisser votre message! "  required></textarea>
-               
-                  </div>
-            
-                  <!-- Submit btn -->
-                  <div class="text-center">
-                    <button type="submit" class="btn btn-primary" tabIndex="-1" (click)="sendMessage()">Envoyer un message</button>
-                  </div>
-                </form>
+                      <input id="nomPatientMessage"  class="form-control form-control-lg thick" placeholder="Nom" [(ngModel)]="messagePatient.nomPatientMessage">
+                    </div>
+                  
+                   
+                    <div class="form-group position-relative">
+                      <label class="d-block">
+                        Email:
+                      </label>
+                      <input type="email"  class="form-control form-control-lg thick" placeholder="E-mail" [(ngModel)]="messagePatient.email">
+                    </div>
+                  
+                    <div class="form-group message">
+                      <label for="contenueMessage" class="d-block">
+                        Message:
+                      </label>
+                      <textarea id="contenueMessage" class="form-control form-control-lg" rows="7" placeholder="Veuillez laisser votre message!" [(ngModel)]="messagePatient.contenueMessage"></textarea>
+                    </div>
+                 
+                    <div class="text-center">
+                      <button (click)="sendMessage()" class="btn btn-primary" tabIndex="-1">Envoyer un message</button>
+                    </div>
+                  </form> -->
+                  <form (ngSubmit)="sendMessage()">
+                    <div>
+                      <label for="nomPatient">Nom du patient:</label>
+                      <input type="text" id="nomPatient" name="nomPatient" [(ngModel)]="messagePatient.nomPatientMessage" required>
+                    </div>
+                    <div>
+                      <label for="email">Email:</label>
+                      <input type="email" id="email" name="email" [(ngModel)]="messagePatient.email" required>
+                    </div>
+                    <div>
+                      <label for="contenuMessage">Contenu du message:</label>
+                      <textarea id="contenuMessage" name="contenuMessage" [(ngModel)]="messagePatient.contenueMessage" required></textarea>
+                    </div>
+                    <!-- Vous pouvez ajouter d'autres champs ici selon vos besoins -->
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                  </form>
          
                 
               </div>
@@ -987,6 +1000,8 @@
 		</div>      
  
   </body>
+
+  
    <br>
   <div class="imag">
     <h2>Libérez votre emploi du temps et gagnez du temps précieux

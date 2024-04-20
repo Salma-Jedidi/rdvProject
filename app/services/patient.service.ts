@@ -87,12 +87,13 @@ export class PatientService {
   ajouterObservation(cin: number, nouvelleObservation: string): Observable<string> {
     return this.http.put<string>(`${this.apiUrl}/${cin}/ajouterObservation`, nouvelleObservation);
   }
-  sendMessage(cinPatient: number, contenue: string, messagePatient: MessagePatient): Observable<MessagePatient> {
-
-    return this.http.post<MessagePatient>(`${this.apiUrl}/messagePatient/${cinPatient}?contenue=${contenue}`, messagePatient);
+  sendMessage(messagePatient: MessagePatient): Observable<MessagePatient> {
+    return this.http.post<MessagePatient>(`${this.apiUrl}/messagePatient`, messagePatient);
   }
-  replyMessage(email: string, reponse: string,message:MessagePatient): Observable<MessagePatient> {
-    return this.http.post<MessagePatient> (`${this.apiUrl}/patients/${email}/messages/reply`, message);
+
+  
+  replyToMessage(messagePatient: MessagePatient): Observable<MessagePatient> {
+    return this.http.put<MessagePatient>(`${this.apiUrl}/reply`, messagePatient);
   }
   getPourcentageRDVPayes(): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}/pourcentagePayes`);

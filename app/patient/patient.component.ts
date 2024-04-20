@@ -61,15 +61,16 @@ export class PatientComponent  implements OnInit {
       nomDeletablissement: '',
       delegationMedecin: ''
     };
-    messagePatient:MessagePatient={
-      idMessage:0,
-      nomPatientMessage:'',
-      contenueMessage:'',
-      reponseMessage:'',
-      dateEnvoieMessage:undefined,
-      dateEnvoiReponse:undefined,
-      email:''
-    }
+    messagePatient: MessagePatient = {
+      idMessage: 0,
+      nomPatientMessage: '',
+      email: '',
+      contenueMessage: '',
+      reponseMessage: '',
+      dateEnvoieMessage: undefined,
+      dateEnvoiReponse: undefined,
+      nomRepondMessage: ''
+    };
      rdvs: RDV[] = [];
      rdvPasses: RDV[] = [];
      rdvAVenir: RDV[] = [];
@@ -99,7 +100,7 @@ export class PatientComponent  implements OnInit {
     };
   
     selectedDelegation: any;
-    contenue: string = '';
+  
   constructor(private patientService: PatientService,private adminService:AdminService,private rdvService:RendezvousService) { }
   ngOnInit(): void {
     this.adminService.getAllDelegations().subscribe(delegations => this.delegations = delegations);
@@ -107,7 +108,7 @@ export class PatientComponent  implements OnInit {
     this.adminService.getAllServiceMedicales().subscribe(services=>this.services=services);
   //  this.adminService.getRDVsForPatient().subscribe((RDVs: RDV[]) => this.rdvs = RDVs);
 
-    this.sendMessage();
+ 
   }
   choisirModePaiement(): void {
     this.patientService.choisirModePaiement(this.patient.cin, this.patient.modePaiement, this.patient.typeCaisse).subscribe(response => {
@@ -366,24 +367,14 @@ getTypeOfEtatRDV(): string {
   return typeof this.rdv.etatRDV;
 }
 sendMessage(): void {
-  // Vérifier si le contenu du message est vide
-  if (!this.messagePatient.contenueMessage.trim()) {
-    console.error('Le contenu du message est vide.');
-   
-    return;
-  }
-
-  this.patientService.sendMessage(this.patient.cin, this.messagePatient.contenueMessage, this.messagePatient)
-    .subscribe(
-      (messagePatient: MessagePatient) => {
-        console.log('Message envoyé avec succès :', messagePatient);
-        // Gérer la réponse si nécessaire
-      },
-      error => {
-        console.error('Erreur lors de l\'envoi du message :', error);
-        // Gérer l'erreur si nécessaire
-      }
-    );
+  this.patientService.sendMessage(this.messagePatient)
+    .subscribe((sentMessage: MessagePatient) => {
+      console.log('Message envoyé avec succès :', sentMessage);
+      
+    }, error => {
+      console.error('Erreur lors de l\'envoi du message :', error);
+      
+    });
 }
 
 

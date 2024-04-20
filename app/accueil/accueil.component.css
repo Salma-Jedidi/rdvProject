@@ -7,13 +7,11 @@ body {
       align-items: center;
       font-family: 'Jost', sans-serif;
       background-image: url("../../assets/images/sante-connectee-et-defis-iot.jpg") ; 
-   
       background-repeat: no-repeat;
+      background-size: cover; 
       z-index: 1;
-      width:100%;
       font-family: Gabriela, Georgia, serif;
       margin-top: 0px;
-     
       overflow: auto;
   }
   article {
@@ -463,7 +461,7 @@ button:hover {
 	margin-top: 60px;
 	margin-left: 10%;
 	width: 80%;
-	height: 80vh;
+	max-height: 120vh;
 	display: grid;
 	place-content: center;
 	color: white;

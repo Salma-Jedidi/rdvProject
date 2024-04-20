@@ -6,5 +6,5 @@ export interface MessagePatient {
     reponseMessage: string;
     dateEnvoieMessage?: string;
     dateEnvoiReponse?: string;
-    }
-    
+    nomRepondMessage?: string; 
+}

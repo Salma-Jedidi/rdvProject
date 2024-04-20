@@ -81,13 +81,13 @@
               </div>
             
               <div class="item item--two">  
-                <img src="../../assets/images/blog-sidebar2.jpg"> 
+                <img src="../../assets/images/contact-img.png"> 
                 <svg xmlns="http://www.w3.org/2000/svg" height="14" width="12.25" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#2c446d" d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-96 55.2C54 332.9 0 401.3 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7c0-81-54-149.4-128-171.1V362c27.6 7.1 48 32.2 48 62v40c0 8.8-7.2 16-16 16H336c-8.8 0-16-7.2-16-16s7.2-16 16-16V424c0-17.7-14.3-32-32-32s-32 14.3-32 32v24c8.8 0 16 7.2 16 16s-7.2 16-16 16H256c-8.8 0-16-7.2-16-16V424c0-29.8 20.4-54.9 48-62V304.9c-6-.6-12.1-.9-18.3-.9H178.3c-6.2 0-12.3 .3-18.3 .9v65.4c23.1 6.9 40 28.3 40 53.7c0 30.9-25.1 56-56 56s-56-25.1-56-56c0-25.4 16.9-46.8 40-53.7V311.2zM144 448a24 24 0 1 0 0-48 24 24 0 1 0 0 48z"/></svg>
                 <p>  Équipe De médecins</p>
               </div>
             
               <div class="item item--three">
-                <img src="../../assets/images/fun-bg.jpg">
+                <img src="../../assets/images/pf4.jpg">
                 <svg class="icon-stats-dots" viewBox="0 0 35 35" width="21" height="21">
                   <path d="M4 28h28v4h-32v-32h4zM9 26c-1.657 0-3-1.343-3-3s1.343-3 3-3c0.088 0 0.176 0.005 0.262 0.012l3.225-5.375c-0.307-0.471-0.487-1.033-0.487-1.638 0-1.657 1.343-3 3-3s3 1.343 3 3c0 0.604-0.179 1.167-0.487 1.638l3.225 5.375c0.086-0.007 0.174-0.012 0.262-0.012 0.067 0 0.133 0.003 0.198 0.007l5.324-9.316c-0.329-0.482-0.522-1.064-0.522-1.691 0-1.657 1.343-3 3-3s3 1.343 3 3c0 1.657-1.343 3-3 3-0.067 0-0.133-0.003-0.198-0.007l-5.324 9.316c0.329 0.481 0.522 1.064 0.522 1.691 0 1.657-1.343 3-3 3s-3-1.343-3-3c0-0.604 0.179-1.167 0.487-1.638l-3.225-5.375c-0.086 0.007-0.174 0.012-0.262 0.012s-0.176-0.005-0.262-0.012l-3.225 5.375c0.307 0.471 0.487 1.033 0.487 1.637 0 1.657-1.343 3-3 3z"></path>
                  </svg>
@@ -106,38 +106,37 @@
 
     <div class="box"> 
       <div class="d-flex justify-content-center row" *ngIf="messages">
-          <div class="col-md-8" >
-              <div class="d-flex flex-column comment-section" *ngFor="let message of messages">
-                  <div class="bg-white p-2">
-                      <div class="d-flex flex-row user-info">
-                          <div class="d-flex flex-column justify-content-start ml-2">
-                            <span class="d-block font-weight-bold name">{{message.nomPatientMessage }}</span>
-                            <span class="date text-black-50 align-left">{{ message.dateEnvoieMessage }}</span>
-                          </div>
-                      </div>
-                      <div class="mt-2">
-                          <p class="comment-text">{{ message.contenueMessage }}</p>
-                      </div>
-                  </div>
-                  <button  (click)="toggleCommentSection()">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="14" width="14" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#cedaed" d="M512 240c0 114.9-114.6 208-256 208c-37.1 0-72.3-6.4-104.1-17.9c-11.9 8.7-31.3 20.6-54.3 30.6C73.6 471.1 44.7 480 16 480c-6.5 0-12.3-3.9-14.8-9.9c-2.5-6-1.1-12.8 3.4-17.4l0 0 0 0 0 0 0 0 .3-.3c.3-.3 .7-.7 1.3-1.4c1.1-1.2 2.8-3.1 4.9-5.7c4.1-5 9.6-12.4 15.2-21.6c10-16.6 19.5-38.4 21.4-62.9C17.7 326.8 0 285.1 0 240C0 125.1 114.6 32 256 32s256 93.1 256 208z"/></svg>
-                  Commentaire
-                  </button>
-                <div #commentSection class="bg-light p-2" [style.display]="'none'">
-                    <div class="d-flex flex-row align-items-start">
-                        <textarea ></textarea>
-                    </div>
-                    <div class="mt-2 text-right">
-                        <button >Répondre</button>
-                        <button >Annuler</button>
-                    </div>
+        <div class="col-md-8">
+          <div class="d-flex flex-column comment-section" *ngFor="let message of messages; let i = index">
+            <div class="bg-white p-2">
+              <div class="d-flex flex-row user-info">
+                <div class="d-flex flex-column justify-content-start ml-2">
+                  <span class="d-block font-weight-bold name">{{ message.nomPatientMessage }}</span>
+                  <span class="date text-black-50 align-left">{{ message.dateEnvoieMessage }}</span>
                 </div>
-                
-                
               </div>
+              <div class="mt-2">
+                <p class="comment-text">{{ message.contenueMessage }}</p>
+              </div>
+              <button (click)="toggleCommentSection(i)">Répondre</button>
+              
+            </div>
+            <div #commentSection [style.display]="showCommentSection[i] ? 'block' : 'none'">
+              <div class="d-flex flex-row align-items-start">
+                <input type="text" [(ngModel)]="messagePatient.nomRepondMessage" placeholder="Nom du répondant">
+              </div>
+              <div class="d-flex flex-row align-items-start">
+                <textarea [(ngModel)]="messagePatient.reponseMessage" placeholder="votre réponse"></textarea>
+              </div>
+              <div class="mt-2 text-right">
+                <button (click)="replyToMessage(message)">Envoyer</button>
+                <button (click)="cancelReply()">Annuler</button>
+              </div>
+            </div>
           </div>
+        </div>
       </div>
-  </div>
-  
+    </div>
+    
   
 </body>
