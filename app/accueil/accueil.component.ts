@@ -55,15 +55,16 @@ export class AccueilComponent implements OnInit {
 
   replyToMessage(message: MessagePatient): void {
     const replyMessage: MessagePatient = {
-      idMessage: this.replyMessageId,
+      idMessage: message.idMessage, // Utilisez l'ID du message passé en paramètre
       nomPatientMessage: message.nomPatientMessage,
       email: message.email,
       contenueMessage: message.contenueMessage,
-      reponseMessage: this.messagePatient.reponseMessage, // Utilisez messagePatient.reponseMessage
-      dateEnvoieMessage: '',
-      dateEnvoiReponse: '',
-      nomRepondMessage:  this.messagePatient.nomRepondMessage
+      reponseMessage: this.messagePatient.reponseMessage,
+      dateEnvoieMessage: message.dateEnvoieMessage, // Utilisez la date d'envoi du message d'origine
+      dateEnvoiReponse: undefined, // La date d'envoi de la réponse peut être définie ultérieurement par le backend
+      nomRepondMessage: this.messagePatient.nomRepondMessage // Utilisez le nom du répondant du message dans le composant
     };
+    
     this.patientService.replyToMessage(replyMessage)
       .subscribe((reponseMessage: MessagePatient) => {
         console.log('Message replied successfully:', reponseMessage);
@@ -74,8 +75,15 @@ export class AccueilComponent implements OnInit {
   }
   
 
-  cancelReply(): void {
-    this.replyContent = '';
-    this.replyMessageId = 0;
+  cancelReply(index: number): void {
+    this.messagePatient.reponseMessage = ''; 
+    this.messagePatient.nomRepondMessage = ''; 
+    this.showCommentSection[index] = false; // Masquer la partie de réponse pour l'élément d'index spécifié
   }
+  
+  showResponseDetails: boolean = false;
+  toggleResponseDetails(event: any): void {
+    this.showResponseDetails = event.target.checked;
+  }
+  
 }

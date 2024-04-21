@@ -13,6 +13,7 @@ body {
       font-family: Gabriela, Georgia, serif;
       margin-top: 0px;
       overflow: auto;
+      height:300vh;
   }
   article {
     margin-top: 40px;
@@ -404,10 +405,13 @@ textarea {
 
 .d-flex {
   display: flex !important;
+ 
 }
 
 .flex-row {
   flex-direction: row !important;
+  margin-top: 10px; /* Ajoutez une marge de 10 pixels en haut */
+  align-items: flex-start;
 }
 
 .flex-column {
@@ -420,6 +424,8 @@ textarea {
 
 .justify-content-start {
   justify-content: flex-start !important;
+  margin-top: 10px; /* Ajoutez une marge de 10 pixels en haut */
+
 }
 
 .name {
@@ -457,11 +463,20 @@ button {
 button:hover {
   background: linear-gradient(45deg, #4a44b8, #3b518a);
 }
+.button-container {
+  display: flex;
+  align-items: center; /* Alignez les éléments verticalement au centre */
+}
+
+.button-container button {
+  margin-right: 10px; /* Ajoutez un espace entre le bouton et l'élément label */
+}
 .box {
-	margin-top: 60px;
+	margin-top: 30px;
 	margin-left: 10%;
 	width: 80%;
-	max-height: 120vh;
+	height: 150vh;
+  overflow: auto;
 	display: grid;
 	place-content: center;
 	color: white;
@@ -471,7 +486,7 @@ button:hover {
 	--main-bg: conic-gradient(
 	  from var(--border-angle),
 	  #21304d,
-	  #22304a 5%,
+	  #54627b 5%,
 	  #1e2f4f 60%,
 	  #21304d 95%
 	);
@@ -498,4 +513,152 @@ button:hover {
   .box:hover {
 	animation-play-state: paused;
   }
-  
+  /* .email-notification*/
+  .email-notification {
+    --border: #99a4d2;
+    --bell-default: #646B8C;
+    --bell-active: #c07874;
+    box-shadow: inset 4px -4px 0 0 var(--border);
+    position: relative;
+    display: table;
+    cursor: pointer;
+    transition: transform .15s;
+    transform: scale(var(--scale, 1)) translateZ(0);
+    &:active {
+        --scale: .96;
+    }
+    &:before,
+    &:after {
+        content: '';
+        position: absolute;
+        background: var(--border);
+        display: block;
+    }
+    &:before {
+        border-radius: 0 0 3px 0;
+        left: 0;
+        top: 0;
+        height: 4px;
+        width: 38px;
+    }
+    &:after {
+        border-radius: 3px 0 0 0;
+        right: 0;
+        bottom: 0;
+        width: 4px;
+        height: 24px;
+    }
+    input {
+        display: none;
+        &:checked {
+            & + svg {
+                --svg-animation: tick;
+                & + .bell {
+                    --bell-animation: bell;
+                    --bell-bottom-animation: bell-bottom;
+                    --bell-bottom-duration: 0s;
+                    --bell-bottom-delay: 1.3s;
+                    --bell-bottom-s: .9;
+                    --bell-top-y: 0px;
+                    --bell-top-delay: .1s;
+                    --bell-color: var(--bell-active);
+                }
+            }
+        }
+    }
+    svg {
+        display: block;
+        width: 50px;
+        height: 34px;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 4px;
+        stroke-dasharray: 60px;
+        stroke-dashoffset: 136px;
+        stroke: var(--border);
+        animation: var(--svg-animation, none) .3s linear;
+    }
+    .bell {
+        position: absolute;
+        right: 2px;
+        top: 6px;
+        height: 4px;
+        width: 20px;
+        border-radius: 2px;
+        background: var(--bell-color, var(--bell-default));
+        animation: var(--bell-animation, none) 1.2s linear .1s;
+        transition: background .25s;
+        &:before,
+        &:after {
+            content: '';
+            display: block;
+            position: absolute;
+        }
+        &:before {
+            left: 2px;
+            bottom: 0;
+            width: 16px;
+            height: 19px;
+            border-radius: 8px 8px 0 0;
+            box-shadow: inset 0 0 0 4px var(--bell-color, var(--bell-default));
+            clip-path: polygon(0 0, 16px 0, 16px calc(19px - var(--bell-top-y, 19px)), 0 calc(19px - var(--bell-top-y, 19px)));
+            transform: translateY(var(--bell-top-y, 19px));
+            transition: transform .1s linear var(--bell-top-delay, 0s), clip-path .1s linear var(--bell-top-delay, 0s), box-shadow .25s;
+        }
+        &:after {
+            bottom: -7px;
+            left: 7px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--bell-color, var(--bell-default));
+            transform: scale(var(--bell-bottom-s, 0));
+            transition: transform var(--bell-bottom-duration, .2s) ease var(--bell-bottom-delay, 0s), background .25s;
+            animation: var(--bell-bottom-animation, none) 1.2s linear .2s;
+        }
+    }
+}
+
+@keyframes tick {
+    25% {
+        stroke-dashoffset: 144px;
+    }
+    50% {
+        stroke-dashoffset: 120px;
+    }
+    100% {
+        stroke-dashoffset: 136px;
+    }
+}
+
+@keyframes bell {
+    8%,
+    92% {
+        transform: translate(6px, -8px) rotate(45deg);
+    }
+}
+
+@keyframes bell-bottom {
+    8%,
+    100% {
+        transform: scale(.9);
+    }
+    14%,
+    26%,
+    38%,
+    50%,
+    62%,
+    74%,
+    86% {
+        transform: translateX(2px) scale(.9);
+    }
+    20%,
+    32%,
+    44%,
+    56%,
+    68%,
+    80% {
+        transform: translateX(-2px) scale(.9);
+    }
+}

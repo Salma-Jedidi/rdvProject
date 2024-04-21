@@ -118,19 +118,37 @@
               <div class="mt-2">
                 <p class="comment-text">{{ message.contenueMessage }}</p>
               </div>
-              <button (click)="toggleCommentSection(i)">Répondre</button>
+              <div class="button-container">
+                <button (click)="toggleCommentSection(i)">Commenter</button>
+                <label class="email-notification">
+                  <input type="checkbox" (change)="toggleResponseDetails($event)" />
+                  <svg viewBox="0 0 64 41">
+                    <path d="M3 2.5L32 21.5L61 2.5" />
+                  </svg>
+                  <div class="bell"></div>
+                </label>
+              </div>
+              <div *ngIf="showResponseDetails" style="margin-left:60px" class="d-flex flex-column justify-content-start ml-2">
+                <span class="d-block font-weight-bold name">{{ message.nomRepondMessage }}</span>
+                <span class="date text-black-50 align-left">{{ message.dateEnvoiReponse }}</span>
+              </div>
+              <div *ngIf="showResponseDetails" class="mt-2" style="margin-left:60px">
+                <p class="comment-text">{{ message.reponseMessage }}</p>
+              </div>
+              
               
             </div>
+
             <div #commentSection [style.display]="showCommentSection[i] ? 'block' : 'none'">
               <div class="d-flex flex-row align-items-start">
-                <input type="text" [(ngModel)]="messagePatient.nomRepondMessage" placeholder="Nom du répondant">
+                <input id="nomRepondMessage"  [(ngModel)]="messagePatient.nomRepondMessage" placeholder="Nom du répondant">
               </div>
               <div class="d-flex flex-row align-items-start">
-                <textarea [(ngModel)]="messagePatient.reponseMessage" placeholder="votre réponse"></textarea>
+                <textarea id="reponseMessage" [(ngModel)]="messagePatient.reponseMessage" placeholder="votre réponse"></textarea>
               </div>
               <div class="mt-2 text-right">
                 <button (click)="replyToMessage(message)">Envoyer</button>
-                <button (click)="cancelReply()">Annuler</button>
+                <button (click)="cancelReply(i)">Annuler</button>
               </div>
             </div>
           </div>
