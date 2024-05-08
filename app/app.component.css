@@ -1,7 +1,7 @@
 body {
   margin: 0;
     padding: 0;
-height:300vh;
+
 position: relative;
 }
   
@@ -385,7 +385,6 @@ position: relative;
  /*sidebaar*/
  .second-footer {
   position: relative;
-  
   left: 0;
   width: 100%;
   background-color: rgba(214, 223, 241, 0.8);
@@ -396,11 +395,13 @@ position: relative;
 .footer-content {
   display: flex;
   justify-content: space-between;
+ 
 }
 
 .footer-section {
   flex: 1;
-  margin-right: 15px;
+  margin-right: 20px;
+  padding: 15px;
 }
 
 .footer-section h3 {
@@ -418,6 +419,7 @@ position: relative;
 .footer-section ul {
   list-style: none;
   padding: 0;
+ 
 }
 
 .footer-section ul li {

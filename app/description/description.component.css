@@ -8,7 +8,8 @@ body {
       background: linear-gradient(to bottom, #0f0c29, #3264a6, #22304a);
       background-image: url("../../assets/images/sante-connectee-et-defis-iot.jpg"); 
       font-family: 'Calibri', 'Arial', sans-serif;
-
+      align-items:center;
+      height:120vh;
   }
   
   .container {
@@ -19,8 +20,9 @@ body {
     border-radius: 8px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Larger box shadow */
     transition: background-color 0.01s ease; /* Smooth transition for background color */
-    margin-left: 330px; 
-    margin-top: 100px;
+    margin-left: auto; 
+    margin-top: 80px;
+    height:105vh;
   }
   
   .container:hover {
