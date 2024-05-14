@@ -69,6 +69,15 @@ export class AdminService {
   addRDV(rdv: RDV): Observable<RDV> {
     return this.http.post<RDV>(`${this.apiUrl}/addrdv`, rdv);
   }
+  checkAvailability(nomDuMedecin: string, dateRDV?: string, heureRDV?: string): Observable<boolean> {
+    const url = `${this.apiUrl}/checkAvailability?nomDuMedecin=${nomDuMedecin}&dateRDV=${dateRDV}&heureRDV=${heureRDV}`;
+    return this.http.get<boolean>(url);
+  }
+
+  suggestAvailableTimes(nomDuMedecin: string, dateRDV?: string, numberOfSuggestions?: number): Observable<string[]> {
+    const url = `${this.apiUrl}/suggestTimes?nomDuMedecin=${nomDuMedecin}&dateRDV=${dateRDV}&numberOfSuggestions=${numberOfSuggestions}`;
+    return this.http.get<string[]>(url);
+  }
 
   updateRDV(rdv: RDV): Observable<RDV> {
     return this.http.put<RDV>(`${this.apiUrl}/updaterdv`, rdv);

@@ -100,7 +100,8 @@ export class PatientComponent  implements OnInit {
     };
   
     selectedDelegation: any;
-  
+    availableTimes: string[] = [];
+    rdvDisponible:any;
   constructor(private patientService: PatientService,private adminService:AdminService,private rdvService:RendezvousService) { }
   ngOnInit(): void {
     this.adminService.getAllDelegations().subscribe(delegations => this.delegations = delegations);
@@ -200,17 +201,38 @@ updateCard() {
   }
 }
 
-addRDV() :void {
+addRDV(): void {
   this.rdv.paiementRDV = 'NonPayes';
+  this.adminService.checkAvailability(this.rdv.nomDuMedecin, this.rdv.dateRDV, this.rdv.heureRdv)
+    .subscribe(
+      (available: boolean) => {
+        if (available) {
+          this.rdvDisponible = true;
+          // Le rendez-vous est disponible, l'ajouter
+          this.addRDVAfterAvailabilityCheck();
+        } else {
+          this.rdvDisponible = false;
+          // Le rendez-vous n'est pas disponible, afficher un message d'erreur
+          console.log('RDV not available. Displaying available times.');
+          this.showAvailableTimes();
+        }
+      },
+      (error) => {
+        console.error('Error checking RDV availability:', error);
+      }
+    );
+}
+
+addRDVAfterAvailabilityCheck(): void {
   this.adminService.addRDV(this.rdv).subscribe(
     (addedRDV: RDV) => {
       console.log('RDV added successfully:', addedRDV);
 
-      // Assign patient and medecin to RDV
+      // Assigner le patient et le médecin au RDV
       this.adminService.assignPatientAndMedecinTordv(this.rdv.nomDuPatient, this.rdv.nomDuMedecin, addedRDV).subscribe(
         () => {
           console.log('Association successful.');
-          // Additional logic if needed
+          // Logique supplémentaire si nécessaire
         },
         (error) => {
           console.error('Error associating RDV with Patient:', error);
@@ -222,6 +244,21 @@ addRDV() :void {
     }
   );
 }
+
+showAvailableTimes(): void {
+  this.adminService.suggestAvailableTimes(this.rdv.nomDuMedecin, this.rdv.dateRDV , 8)
+    .subscribe(
+      (availableTimes: string[]) => {
+        console.log('Available times:', availableTimes);
+        this.availableTimes = availableTimes; // Mettre à jour la variable avec les temps disponibles
+      },
+      (error) => {
+        console.error('Error getting available times:', error);
+      }
+    );
+}
+
+
 updateRDV() :void{
   this.rdv.paiementRDV = 'NonPayes';
   // Assuming you have an RDV object ready to be updated
@@ -390,6 +427,8 @@ fillFormFields(rdv: RDV): void {
   this.rdv.nomDuPatient = rdv.nomDuPatient;
   this.rdv.nomDuMedecin = rdv.nomDuMedecin;
   this.rdv.idRDV=rdv.idRDV;
+  this.rdv.dateRDV=rdv.dateRDV;
+  this.rdv.heureRdv=rdv.heureRdv;
 }
 fillFormFieldPatient(patient:Patient): void {
   this.patient.cin=patient.cin;
