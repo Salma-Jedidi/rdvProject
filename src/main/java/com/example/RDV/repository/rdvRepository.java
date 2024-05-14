@@ -4,6 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -49,4 +52,8 @@ public interface rdvRepository extends JpaRepository<RDV, Integer> {
 
     long countByPaiementRDV(PaiementRDV paiementRDV);
     Integer countByEtatRDV(EtatRDV etatRDV);
+
+    List<RDV> findByNomDuMedecinAndDateRDVAndHeureRdv(String nomDuMedecin, LocalDate dateRDV, LocalTime heureRDV);
+
+    List<RDV> findByNomDuMedecinAndDateRDV(String nomDuMedecin, LocalDate dateRDV);
 }

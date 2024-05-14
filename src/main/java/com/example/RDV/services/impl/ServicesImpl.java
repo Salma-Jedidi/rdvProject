@@ -11,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -341,6 +343,39 @@ public class ServicesImpl implements Services {
         rdv.setPaiementRDV(PaiementRDV.NonPayes);
         // Save the RDV to associate it with the Medecin and Patient entities
         return rdvRepository.save(rdv);
+    }
+    @Override
+    public boolean isRDVAvailable(String nomDuMedecin, LocalDate dateRDV, LocalTime heureRDV) {
+        List<RDV> rdvs = rdvRepository.findByNomDuMedecinAndDateRDVAndHeureRdv(nomDuMedecin, dateRDV, heureRDV);
+
+        return rdvs.isEmpty();
+    }
+    @Override
+    public List<LocalTime> suggestAvailableTimes(String nomDuMedecin, LocalDate dateRDV, int numberOfSuggestions) {
+        // Plage horaire de disponibilité (par exemple, de 9h à 17h)
+        LocalTime startTime = LocalTime.of(9, 0);
+        LocalTime endTime = LocalTime.of(17, 0);
+
+        List<LocalTime> suggestions = new ArrayList<>();
+        List<RDV> rdvs = rdvRepository.findByNomDuMedecinAndDateRDV(nomDuMedecin, dateRDV);
+
+        // Parcours de la plage horaire de disponibilité
+        LocalTime currentTime = startTime;
+        while (suggestions.size() < numberOfSuggestions && currentTime.isBefore(endTime)) {
+            boolean isAvailable = true;
+            for (RDV rdv : rdvs) {
+                if (rdv.getHeureRdv().equals(currentTime)) {
+                    isAvailable = false;
+                    break;
+                }
+            }
+            if (isAvailable) {
+                suggestions.add(currentTime);
+            }
+            currentTime = currentTime.plusMinutes(30); // Incrémenter de 30 minutes
+        }
+
+        return suggestions;
     }
 
     @Override

@@ -4,6 +4,8 @@ import com.example.RDV.entities.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +64,11 @@ public interface Services {
     //Gestion des Rendez-vous
     public List<RDV> getRendezVousByPatientAndMedecin(Integer idPatient, Integer idMedecin);
     public RDV addRDV(RDV rdv);
+
+
+    public boolean isRDVAvailable(String nomDuMedecin, LocalDate dateRDV, LocalTime heureRDV);
+    List<LocalTime> suggestAvailableTimes(String nomDuMedecin, LocalDate dateRDV, int numberOfSuggestions);
+
     public RDV updateRDV(RDV rdv);
     public void deleteRDV(Integer idRDV);
     public List<RDV> getAcceptedAppointments();
