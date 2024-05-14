@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 @Entity
@@ -14,7 +15,7 @@ public class RDV {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idRDV;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date dateRDV;
+    private LocalDate dateRDV;
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonFormat(pattern = "HH:mm")
 

@@ -4,11 +4,16 @@ import com.example.RDV.entities.*;
 import com.example.RDV.services.Services;
 import lombok.AllArgsConstructor;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import java.util.List;
+import java.sql.Date;
 
 @RestController
 @AllArgsConstructor
@@ -246,6 +251,32 @@ public class AdminController {
     public RDV ajouterRDV(@RequestBody RDV rdv) {
         RDV rendezvous=services.addRDV(rdv);
         return rendezvous;
+    }
+    @GetMapping("/checkAvailability")
+    public boolean checkAvailability(
+            @RequestParam String nomDuMedecin,
+            @RequestParam String dateRDV,
+            @RequestParam String heureRDV
+    ) {
+        LocalDate parsedDateRDV = LocalDate.parse(dateRDV);
+        LocalDate sqlDateRDV = Date.valueOf(parsedDateRDV).toLocalDate(); // Conversion en java.sql.Date
+
+        LocalTime parsedHeureRDV = LocalTime.parse(heureRDV);
+
+        // Appeler le service pour vérifier la disponibilité
+        return services.isRDVAvailable(nomDuMedecin, sqlDateRDV, parsedHeureRDV);
+    }
+    @GetMapping("/suggestTimes")
+    public List<LocalTime> suggestAvailableTimes(
+            @RequestParam String nomDuMedecin,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateRDV,
+            @RequestParam int numberOfSuggestions
+    ) {
+        // Convertir java.sql.Date en java.time.LocalDate si nécessaire
+        LocalDate localDateRDV = dateRDV;
+
+        // Appeler le service avec les paramètres modifiés
+        return services.suggestAvailableTimes(nomDuMedecin, localDateRDV, numberOfSuggestions);
     }
     @PreAuthorize("permitAll()")
     @PutMapping("/updaterdv")
