@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../models/User';
 @Injectable({
@@ -11,6 +11,15 @@ export class AuthentificationService {
 
   constructor(private http: HttpClient) {}
 
+  emailExists(email: string): Observable<boolean> {
+    const params = new HttpParams().set('email', email);
+    return this.http.get<boolean>(`${this.baseUrl}/emailExists`, { params });
+  }
+
+  isPasswordValid(password: string): Observable<boolean> {
+    const params = new HttpParams().set('password', password);
+    return this.http.get<boolean>(`${this.baseUrl}/isPasswordValid`, { params });
+  }
   signup(signUpRequest: User): Observable<User> {
     return this.http.post<User>(`${this.baseUrl}/signup`, signUpRequest);
   }

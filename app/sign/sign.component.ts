@@ -28,27 +28,45 @@ export class SignComponent implements OnInit {
   ngOnInit() {}
 
   signup(): void {
+    this.errorMessage = null;
 
-    const newUser: User = {
-      id: 0,
-      nom: this.user.nom,
-      email: this.user.email,
-      password: this.user.password,
-      role: this.user.role,
-      dateCreation: this.user.dateCreation
-    };
-
-    this.authService.signup(newUser).subscribe(
-      (response) => {
-        console.log('Signup successful', response);
-        // Handle successful signup response if needed
-      },
-      (error) => {
-        console.error('Signup error:', error);
-        // Handle signup error if needed
+    this.authService.emailExists(this.user.email).subscribe(emailExists => {
+      if (emailExists) {
+        this.errorMessage = 'Email already exists';
+        alert(this.errorMessage);  // Alert box for email already exists
+        return;
       }
-    );
+
+      this.authService.isPasswordValid(this.user.password).subscribe(isValid => {
+        if (!isValid) {
+          this.errorMessage = 'Password must be at least 6 characters long';
+          alert(this.errorMessage);  // Alert box for invalid password
+          return;
+        }
+
+        const newUser: User = {
+          id: 0,
+          nom: this.user.nom,
+          email: this.user.email,
+          password: this.user.password,
+          role: this.user.role,
+          dateCreation: this.user.dateCreation
+        };
+
+        this.authService.signup(newUser).subscribe(
+          (response) => {
+            console.log('Signup successful', response);
+            // Handle successful signup response if needed
+          },
+          (error) => {
+            console.error('Signup error:', error);
+            this.errorMessage = 'An error occurred during signup';
+          }
+        );
+      });
+    });
   }
+
 
   login(loginForm: NgForm): void {
     console.log('User object:', this.user);

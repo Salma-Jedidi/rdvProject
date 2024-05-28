@@ -85,5 +85,14 @@ export class AccueilComponent implements OnInit {
   toggleResponseDetails(event: any): void {
     this.showResponseDetails = event.target.checked;
   }
-  
+  sendMessage(): void {
+    this.patientService.sendMessage(this.messagePatient)
+      .subscribe((sentMessage: MessagePatient) => {
+        console.log('Message envoyé avec succès :', sentMessage);
+        
+      }, error => {
+        console.error('Erreur lors de l\'envoi du message :', error);
+        
+      });
+  }
 }
