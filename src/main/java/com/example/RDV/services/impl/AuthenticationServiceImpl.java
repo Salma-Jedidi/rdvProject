@@ -95,6 +95,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         email.setText(content);
         javaMailSender.send(email);
     }
+    public boolean emailExists(String email) {
+        return userRepository.existsByEmail(email);
+    }
 
+    public boolean isPasswordValid(String password) {
+        return password != null && password.length() >= 6;
+    }
 
 }

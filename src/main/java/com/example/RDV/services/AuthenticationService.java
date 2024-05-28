@@ -12,4 +12,6 @@ public interface AuthenticationService {
     JwtAuthenticationResponse signin(SigninRequest signinRequest);
     JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
     void sendPasswordByEmail(String email);
+    public boolean emailExists(String email);
+    public boolean isPasswordValid(String password);
 }

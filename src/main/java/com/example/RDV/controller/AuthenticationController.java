@@ -43,5 +43,15 @@ public class AuthenticationController {
         return ResponseEntity.ok("Un email de récupération de mot de passe a été envoyé à votre adresse email.");
     }
 
+    @GetMapping("/emailExists")
+    public ResponseEntity<Boolean> emailExists(@RequestParam String email) {
+        boolean exists = authenticationService.emailExists(email);
+        return ResponseEntity.ok(exists);
+    }
 
+    @GetMapping("/isPasswordValid")
+    public ResponseEntity<Boolean> isPasswordValid(@RequestParam String password) {
+        boolean isValid = authenticationService.isPasswordValid(password);
+        return ResponseEntity.ok(isValid);
+    }
 }
