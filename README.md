@@ -135,13 +135,7 @@ Ajout d’un moteur de recommandation pour proposer des médecins basés sur les
 
 Extension à d’autres spécialités médicales et intégration avec des pharmacies.
 
-### Annexes
 
-Diagramme UML des cas d’utilisation.
-
-Modèle de données (MER).
-
-Exemples de requêtes API REST.
 
 ### Encadrante Académique : Madame Asma
 ### Développeuse : Jedidi Salma
