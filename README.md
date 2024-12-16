@@ -35,17 +35,28 @@ Sécurité : Gestion des authentifications et autorisations avec JWT.
 
 ### Backend
 
-Framework : Spring Boot
+Framework : Spring Boot ,Flask (Python), pour la gestion des recommandations personnalisées des médecins basées sur les préférences des utilisateurs.
 
 Base de données : MySQL
 
 Sécurité : Spring Security, JWT pour l’authentification.
+ 
 
 ### Frontend
 
 Framework : Angular
 
 Design : Bootstrap, CSS personnalisé.
+Flask et Python : Si vous envisagez d'utiliser Flask pour un service supplémentaire dans ce projet, comme un microservice pour le traitement des données ou la gestion de recommandations basées sur les préférences des patients, vous pouvez mentionner son utilisation dans la section des Technologies Utilisées. Par exemple :
+
+### Dlib et Reconnaissance Faciale : 
+La reconnaissance faciale peut être intégrée dans le processus d'authentification ou de vérification de l'identité des utilisateurs, surtout dans un contexte médical où la sécurité est primordiale. 
+
+###  Fonctionnalités de Sécurité Avancées :
+Reconnaissance faciale : Intégration de la reconnaissance faciale à l’aide de la bibliothèque Dlib (Python) pour renforcer l'authentification des utilisateurs (patients et médecins), ajoutant une couche de sécurité supplémentaire lors de la connexion.
+
+### Intégration du Chatbot : 
+pour répondre automatiquement aux questions fréquentes des patients, ou pour aider à la prise de rendez-vous.
 
 ### Mobile
 
